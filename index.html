@@ -1,24 +1,77 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>ENESMA Realty</title>
-  <meta name="description" content="ENESMA Realty — consumer site scaffold. Marketing build owned by Mars." />
-  <style>
-    :root { color-scheme: light; --gold: #c9a227; --ink: #1a1a1a; --bg: #f7f4ef; }
-    body { margin: 0; font-family: system-ui, -apple-system, Segoe UI, sans-serif; background: var(--bg); color: var(--ink); }
-    main { max-width: 40rem; margin: 18vh auto; padding: 2rem; text-align: center; }
-    h1 { letter-spacing: .04em; font-weight: 700; }
-    p { line-height: 1.5; opacity: .85; }
-    a { color: var(--gold); }
-  </style>
+  <meta name="description" content="Southern California brokerage. Buy, sell, refinance, or meet an agent. Underpromise and overdeliver.">
+  <meta name="theme-color" content="#000007">
+  <link rel="canonical" href="https://www.enesmarealty.com/">
+  <link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <meta property="og:title" content="ENESMA Realty">
+  <meta property="og:description" content="Southern California brokerage. Buy, sell, refinance, or meet an agent. Underpromise and overdeliver.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.enesmarealty.com/">
+  <meta property="og:image" content="https://www.enesmarealty.com/assets/scenic-socal.jpg">
+  <link rel="stylesheet" href="css/site.css?v=1">
 </head>
-<body>
-  <main>
-    <h1>ENESMA Realty</h1>
-    <p>Consumer site scaffold for <code>www.enesmarealty.com</code>.</p>
-    <p>Agent Hub stays at <a href="https://agent.enesmarealty.com/">agent.enesmarealty.com</a>.</p>
+<body data-page="home" data-root="">
+  <a class="skip" href="#main">Skip to content</a>
+  <div id="site-header"></div>
+  <noscript>
+  <nav class="noscript-nav" aria-label="Primary"><a href="./">Home</a> <a href="buy/">Buy</a> <a href="sell/">Sell</a> <a href="refinance/">Refinance</a> <a href="agents/">Agents</a> <a href="join/">Join</a> <a href="contact/">Contact</a></nav>
+  <div class="noscript-foot">
+    <img src="assets/eho-white.png" alt="Equal Housing Opportunity" width="421" height="446">
+    <span>DRE# 01926362</span>
+    <a href="tel:+19095660505">(909) 566-0505</a>
+    <a href="mailto:enrique@enesmabroker.com">enrique@enesmabroker.com</a>
+  </div>
+</noscript>
+  <main id="main">
+    <section class="home-hero">
+      <div class="hero-brand">
+        <img class="hero-logo" src="assets/logo-white.png" width="1600" height="369" alt="ENESMA Realty">
+        <div class="gold-rule" aria-hidden="true"></div>
+        <h1 class="slogan"><span>UNDERPROMISE</span> <span>&amp; OVERDELIVER</span></h1>
+        <div class="red-fade" aria-hidden="true"></div>
+      </div>
+      <img class="scenic" src="assets/scenic-socal.jpg" width="1920" height="1080" alt="Modern Southern California home with a pool, palm trees, and open glass walls">
+    </section>
+    <section class="intro">
+      <p class="lede">A Southern California brokerage for a straight answer and a clean close.</p>
+      <div class="copy">
+        <p>Buying, selling, or looking at a refinance, you work with an agent who explains the numbers, returns the call, and stays through the finish.</p>
+      </div>
+    </section>
+    <div class="paths-wrap">
+      <section class="paths" aria-label="Start here">
+        <a class="path" href="buy/">
+          <h2>BUY</h2>
+          <p>A clear plan for price, place, and timing.</p>
+        </a>
+        <a class="path" href="sell/">
+          <h2>SELL</h2>
+          <p>Pricing, prep, and what you are likely to net.</p>
+        </a>
+        <a class="path" href="agents/">
+          <h2>AGENTS</h2>
+          <p>Meet the people who do the work.</p>
+        </a>
+        <a class="path" href="join/">
+          <h2>JOIN</h2>
+          <p>Build your business with a direct line to the broker.</p>
+        </a>
+      </section>
+    </div>
+    <section class="office-band">
+      <h2>THE OFFICE</h2>
+      <div class="gold-rule" aria-hidden="true"></div>
+      <p><a class="phone" href="tel:+19095660505">(909) 566-0505</a></p>
+      <p><a class="mail" href="mailto:enrique@enesmabroker.com">enrique@enesmabroker.com</a></p>
+    </section>
   </main>
+  <div id="site-footer"></div>
+  <script src="js/site.js?v=1"></script>
 </body>
 </html>

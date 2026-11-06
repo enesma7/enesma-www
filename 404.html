@@ -1,12 +1,65 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Not found · ENESMA Realty</title>
-  <meta http-equiv="refresh" content="0; url=/" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Page not found · ENESMA Realty</title>
+  <meta name="robots" content="noindex">
+  <meta name="theme-color" content="#000007">
+  <script>
+    (function () {
+      var path = location.pathname;
+      var base = "/";
+      var marker = "/enesma-www/";
+      var at = path.indexOf(marker);
+      if (at !== -1) base = path.slice(0, at + marker.length);
+      window.__ENESMA_BASE = base;
+      var css = document.createElement("link");
+      css.rel = "stylesheet";
+      css.href = base + "css/site.css?v=1";
+      document.head.appendChild(css);
+      var icon = document.createElement("link");
+      icon.rel = "icon";
+      icon.href = base + "favicon-32.png";
+      document.head.appendChild(icon);
+    })();
+  </script>
 </head>
-<body>
-  <p><a href="/">ENESMA Realty</a></p>
+<body data-page="404">
+  <a class="skip" href="#main">Skip to content</a>
+  <div id="site-header"></div>
+  <noscript>
+    <nav class="noscript-nav" aria-label="Primary">
+      <a href="https://www.enesmarealty.com/">Home</a>
+      <a href="https://enesma7.github.io/enesma-www/">Preview home</a>
+    </nav>
+    <div class="noscript-foot">
+      <span>DRE# 01926362</span>
+      <a href="mailto:enrique@enesmabroker.com">enrique@enesmabroker.com</a>
+    </div>
+  </noscript>
+  <main id="main">
+    <section class="page-hero">
+      <p class="kicker">404</p>
+      <h1>PAGE NOT FOUND</h1>
+      <div class="gold-rule" aria-hidden="true"></div>
+      <div class="red-fade" aria-hidden="true"></div>
+    </section>
+    <section class="not-found">
+      <div class="shell">
+        <p>That page is not on this site.</p>
+        <div class="cta-wrap">
+          <a class="cta" id="home-link" href="/">Back to home</a>
+        </div>
+      </div>
+    </section>
+  </main>
+  <div id="site-footer"></div>
+  <script>
+    document.getElementById("home-link").setAttribute("href", window.__ENESMA_BASE || "/");
+    var script = document.createElement("script");
+    script.src = window.__ENESMA_BASE + "js/site.js?v=1";
+    document.body.appendChild(script);
+  </script>
 </body>
 </html>
