@@ -7,23 +7,27 @@ The Agent Hub is a separate product. It stays in [`enesma-agent-hub`](https://gi
 - **Custom domain:** `www.enesmarealty.com` (`CNAME` at the repo root)
 - **Pages source:** `main` branch, site root (`/`)
 - **Preview:** [https://enesma7.github.io/enesma-www/](https://enesma7.github.io/enesma-www/)
-- **Stack:** static HTML, CSS, and JS. No build step. Styles and scripts are cache-busted with `?v=1`.
+- **Stack:** static HTML, CSS, and JS. No build step. Styles and scripts are cache-busted with `?v=2`.
 
 ## Pages
 
 | Route | Purpose |
 | --- | --- |
-| `/` | Home. Wordmark, UNDERPROMISE & OVERDELIVER, paths into Buy, Sell, Agents, and Join |
+| `/` | Home. Full-bleed hero and six photo tiles: Buy, Sell, Refinance, Join, Agents, Contact |
 | `/buy/` | Buyer inquiry. One full-page form button |
 | `/sell/` | Seller inquiry |
 | `/refinance/` | Refinance inquiry |
-| `/agents/` | Enrique Esparza and Lilia Amador |
+| `/agents/` | Roster rendered from `js/agents.js` |
 | `/agents/enrique-esparza/` | Broker page. Direct line (909) 212-2994 |
 | `/agents/lilia-amador/` | Agent page |
 | `/join/` | Join the team. `#join-calculator` is reserved for a later calculator embed |
 | `/contact/` | Office line (909) 566-0505 and enrique@enesmabroker.com |
 
-Shared header and footer live in `js/site.js`. Office email on every page is `enrique@enesmabroker.com`. Office phone is `(909) 566-0505`. Footer carries DRE# 01926362 and the Equal Housing mark. There is no MLS or IDX search.
+Shared header and footer live in `js/site.js`. The header is a sticky black bar. Agents opens a menu of the people in `js/agents.js`. Office email on the brokerage footer and Contact page is `enrique@enesmabroker.com`. Office phone is `(909) 566-0505`. An agent's own phone and email stay on that profile only. Footer carries DRE# 01926362 and the Equal Housing mark. There is no MLS or IDX search.
+
+## Adding an agent
+
+Profiles share one template. Append one object to `ENESMA_AGENTS` in `js/agents.js` (photo, name, contact, socials, Zillow bio). Then copy `agents/enrique-esparza/index.html` to `agents/<slug>/index.html`, set `data-agent` to that slug, and update the title. The roster and the Agents menu pick up the new entry. Do not invent a bio.
 
 ## Lead forms
 

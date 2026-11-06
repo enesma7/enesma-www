@@ -16,7 +16,7 @@
       window.__ENESMA_BASE = base;
       var css = document.createElement("link");
       css.rel = "stylesheet";
-      css.href = base + "css/site.css?v=1";
+      css.href = base + "css/site.css?v=2";
       document.head.appendChild(css);
       var icon = document.createElement("link");
       icon.rel = "icon";
@@ -57,9 +57,14 @@
   <div id="site-footer"></div>
   <script>
     document.getElementById("home-link").setAttribute("href", window.__ENESMA_BASE || "/");
-    var script = document.createElement("script");
-    script.src = window.__ENESMA_BASE + "js/site.js?v=1";
-    document.body.appendChild(script);
+    var agents = document.createElement("script");
+    agents.src = window.__ENESMA_BASE + "js/agents.js?v=2";
+    agents.onload = function () {
+      var script = document.createElement("script");
+      script.src = window.__ENESMA_BASE + "js/site.js?v=2";
+      document.body.appendChild(script);
+    };
+    document.body.appendChild(agents);
   </script>
 </body>
 </html>
