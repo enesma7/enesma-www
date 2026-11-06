@@ -25,17 +25,19 @@ The Agent Hub is a separate product. It stays in [`enesma-agent-hub`](https://gi
 
 Shared header and footer live in `js/site.js`. Office email on every page is `enrique@enesmabroker.com`. Office phone is `(909) 566-0505`. Footer carries DRE# 01926362 and the Equal Housing mark. There is no MLS or IDX search.
 
-## Lead forms still needed
+## Lead forms
 
-Public form URLs were not in this repo or the public Agent Hub. The gold buttons use these placeholders until Mars drops in the live Google Form links (full page, new tab):
+Each gold button opens the matching full-page form in a new tab:
 
-- Buy: `#todo-buy-form`
-- Sell: `#todo-sell-form`
-- Refinance: `#todo-refinance-form`
-- Join: `#todo-join-form`
-- Contact: `#todo-contact-form`
+- Buy: https://app.enesmarealty.com/leadforms/buy.html
+- Sell: https://app.enesmarealty.com/leadforms/sell.html
+- Refinance: https://app.enesmarealty.com/leadforms/refinance.html
+- Join: https://app.enesmarealty.com/leadforms/join.html
+- Contact: https://app.enesmarealty.com/leadforms/contact.html
 
-No Join calculator in Phase 1. Nothing stable and public was available to embed.
+`https://app.enesmarealty.com/leadforms/refer.html` is live. This consumer site has no Refer page, so it is not linked.
+
+No Join calculator in Phase 1. `#join-calculator` on the Join page is reserved for a later embed.
 
 ## DNS (GoDaddy — registrar stays GoDaddy)
 
