@@ -690,3 +690,63 @@ body.nav-lock { overflow: hidden; }
   html { scroll-behavior: auto; }
   *, *::before, *::after { transition: none !important; }
 }
+
+/* Full-screen gold wordmark. The vector is painted at 8× and moved with
+   transform/opacity so the fly-through stays sharp. Home page only. */
+html.brand-intro-pending,
+html.brand-intro-pending body {
+  background: #000007;
+}
+html.brand-intro-pending body > :not(.brand-intro) {
+  visibility: hidden;
+}
+.brand-intro {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  width: 100%;
+  height: 100%;
+  background: #000007;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+.brand-intro-mark {
+  position: relative;
+  width: min(72vw, 680px);
+  aspect-ratio: 2172 / 724;
+  min-width: 0;
+}
+.brand-intro-zoom {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 800%;
+  height: 800%;
+  transform: translate(-50%, -50%) scale(0.125);
+  transform-origin: center center;
+  opacity: 0;
+  will-change: transform, opacity;
+}
+.brand-intro-logo { display: block; width: 100%; height: 100%; }
+.brand-intro-glint {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  -webkit-mask: url("../assets/logo-gold.svg?v=1") center / 100% 100% no-repeat;
+  mask: url("../assets/logo-gold.svg?v=1") center / 100% 100% no-repeat;
+}
+.brand-intro-glint span {
+  position: absolute;
+  top: -15%;
+  bottom: -15%;
+  left: 0;
+  width: 18%;
+  background: linear-gradient(100deg, transparent 0%, rgba(255, 255, 255, 0.15) 35%, rgba(255, 255, 255, 1) 50%, rgba(255, 236, 190, 0.35) 62%, transparent 100%);
+  opacity: 0;
+  transform: translate3d(-160%, 0, 0);
+  will-change: transform, opacity;
+}

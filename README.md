@@ -7,7 +7,7 @@ The Agent Hub is a separate product. It stays in [`enesma-agent-hub`](https://gi
 - **Custom domain:** `www.enesmarealty.com` (`CNAME` at the repo root)
 - **Pages source:** `main` branch, site root (`/`)
 - **Preview:** [https://enesma7.github.io/enesma-www/](https://enesma7.github.io/enesma-www/)
-- **Stack:** static HTML, CSS, and JS. No build step. Styles and scripts are cache-busted with `?v=2`.
+- **Stack:** static HTML, CSS, and JS. No build step. `site.css` and `site.js` are cache-busted with `?v=3`.
 
 ## Pages
 

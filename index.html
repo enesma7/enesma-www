@@ -15,7 +15,18 @@
   <meta property="og:url" content="https://www.enesmarealty.com/">
   <meta property="og:image" content="https://www.enesmarealty.com/assets/scenic-socal.jpg">
   <link rel="preload" as="image" href="assets/scenic-socal.jpg">
-  <link rel="stylesheet" href="css/site.css?v=2">
+  <link rel="stylesheet" href="css/site.css?v=3">
+  <script>
+    (function () {
+      try {
+        if (sessionStorage.getItem("enesma_intro_seen") === "1") return;
+      } catch (e) {}
+      try {
+        if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+      } catch (e) {}
+      document.documentElement.classList.add("brand-intro-pending");
+    })();
+  </script>
 </head>
 <body data-page="home" data-root="">
   <a class="skip" href="#main">Skip to content</a>
@@ -71,6 +82,6 @@
   </main>
   <div id="site-footer"></div>
   <script src="js/agents.js?v=2"></script>
-  <script src="js/site.js?v=2"></script>
+  <script src="js/site.js?v=3"></script>
 </body>
 </html>
