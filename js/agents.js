@@ -60,10 +60,24 @@
     return null;
   }
 
+  function safeHttp(value) {
+    var v = String(value || "").trim();
+    if (/^https?:\/\//i.test(v)) return v;
+    return "";
+  }
+
+  function safeMail(value) {
+    var v = String(value || "").trim();
+    if (!/^[^\s<>"']+@[^\s<>"']+\.[^\s<>"']+$/.test(v)) return "";
+    return "mailto:" + v;
+  }
+
   function socialRow(items) {
     return (items || []).map(function (s) {
+      var href = safeHttp(s.href);
+      if (!href) return "";
       var icon = socialIcon(s.label);
-      return '<a href="' + esc(s.href) + '" target="_blank" rel="noopener noreferrer" aria-label="' + esc(s.label) + '" title="' + esc(s.label) + '">' + (icon || esc(s.label)) + "</a>";
+      return '<a href="' + esc(href) + '" target="_blank" rel="noopener noreferrer" aria-label="' + esc(s.label) + '" title="' + esc(s.label) + '">' + (icon || esc(s.label)) + "</a>";
     }).join("");
   }
 
@@ -77,9 +91,12 @@
 
   function contactHtml(a) {
     var bits = [];
-    if (a.phone) bits.push('<a href="' + telHref(a.phone) + '">' + esc(a.phone) + "</a>");
-    if (a.email) bits.push('<a href="mailto:' + esc(a.email) + '">' + esc(a.email) + "</a>");
-    if (a.web) bits.push('<a href="' + esc(a.web) + '" target="_blank" rel="noopener noreferrer">' + esc(a.webLabel || a.web) + "</a>");
+    var tel = a.phone ? telHref(a.phone) : "";
+    var mail = safeMail(a.email);
+    var web = safeHttp(a.web);
+    if (a.phone && tel.indexOf("tel:") === 0) bits.push('<a href="' + esc(tel) + '">' + esc(a.phone) + "</a>");
+    if (mail) bits.push('<a href="' + esc(mail) + '">' + esc(a.email) + "</a>");
+    if (web) bits.push('<a href="' + esc(web) + '" target="_blank" rel="noopener noreferrer">' + esc(a.webLabel || a.web) + "</a>");
     if (!bits.length) return "";
     return '<p class="agent-contact">' + bits.join("") + "</p>";
   }
@@ -110,7 +127,7 @@
   }
 
   function rosterCard(a) {
-    var href = esc(a.slug) + "/";
+    var href = esc(root() + (a.pageHref || ("agents/" + a.slug + "/")));
     var langs = a.languages || [];
     var phone = a.phone ? '<p class="agent-line">' + esc(a.phone) + "</p>" : "";
     var email = a.email ? '<p class="agent-line">' + esc(a.email) + "</p>" : "";
@@ -190,15 +207,62 @@
     applyRosterFilter();
   }
 
+  function missingHtml() {
+    return (
+      '<section class="page-hero">' +
+        '<p class="kicker">SOUTHERN CALIFORNIA</p>' +
+        '<h1>Agent Not Found</h1>' +
+        '<div class="gold-rule" aria-hidden="true"></div>' +
+        '<div class="red-fade" aria-hidden="true"></div>' +
+      "</section>" +
+      '<section class="not-found"><div class="shell">' +
+        "<p>That agent is not on the ENESMA Realty roster.</p>" +
+        '<div class="cta-wrap"><a class="cta" href="' + root() + 'agents/">Meet Our Agents</a></div>' +
+      "</div></section>"
+    );
+  }
+
+  function pagePath() {
+    var path = location.pathname || "";
+    var marker = "/enesma-www/";
+    var at = path.indexOf(marker);
+    if (at !== -1) return path.slice(at + marker.length - 1);
+    return path;
+  }
+
+  function querySlug() {
+    var value = "";
+    try { value = new URLSearchParams(location.search).get("a") || ""; }
+    catch (e) { value = ""; }
+    value = String(value).trim().toLowerCase();
+    if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(value)) return "";
+    return value;
+  }
+
+  function requestedSlug() {
+    var body = document.body;
+    var explicit = body && body.getAttribute("data-agent");
+    if (explicit) return String(explicit).trim().toLowerCase();
+    var path = pagePath();
+    if (/\/agents\/profile\/?$/i.test(path)) return querySlug();
+    if (body && body.getAttribute("data-page") === "404") {
+      var match = path.match(/\/agents\/([a-z0-9-]+)\/?$/i);
+      if (match && match[1].toLowerCase() !== "profile") return match[1].toLowerCase();
+    }
+    return "";
+  }
+
   function mount() {
     var body = document.body;
     if (!body) return;
-    var slug = body.getAttribute("data-agent");
     var main = document.getElementById("main");
-    if (slug && main) {
-      var agent = bySlug(slug);
+    var slug = requestedSlug();
+    var profileRoute = /\/agents\/profile\/?$/i.test(pagePath());
+    if ((slug || profileRoute) && main) {
+      var agent = slug ? bySlug(slug) : null;
       if (!agent) {
-        main.innerHTML = '<section class="not-found"><div class="shell"><p>That agent is not on this site.</p><p><a href="' + root() + 'agents/">All Agents</a></p></div></section>';
+        document.title = "Agent Not Found · ENESMA Realty";
+        main.innerHTML = missingHtml();
         return;
       }
       document.title = agent.name + " · ENESMA Realty";
@@ -221,10 +285,15 @@
     else fn();
   }
 
-  function loadJson(url) {
+  function loadJson(url, ms) {
     var ctrl = typeof AbortController === "function" ? new AbortController() : null;
-    var timer = ctrl ? setTimeout(function () { ctrl.abort(); }, 5000) : 0;
-    return fetch(url, { credentials: "omit", signal: ctrl ? ctrl.signal : undefined }).then(function (res) {
+    var timer = ctrl ? setTimeout(function () { ctrl.abort(); }, ms || 6000) : 0;
+    return fetch(url, {
+      method: "GET",
+      redirect: "follow",
+      credentials: "omit",
+      signal: ctrl ? ctrl.signal : undefined
+    }).then(function (res) {
       if (timer) clearTimeout(timer);
       if (!res.ok) throw new Error(String(res.status));
       return res.json();
@@ -234,17 +303,62 @@
     });
   }
 
+  function postJson(url) {
+    var ctrl = typeof AbortController === "function" ? new AbortController() : null;
+    var timer = ctrl ? setTimeout(function () { ctrl.abort(); }, 6000) : 0;
+    return fetch(url, {
+      method: "POST",
+      redirect: "follow",
+      credentials: "omit",
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: '{"action":"publicAgents"}',
+      signal: ctrl ? ctrl.signal : undefined
+    }).then(function (res) {
+      if (timer) clearTimeout(timer);
+      if (!res.ok) throw new Error(String(res.status));
+      return res.json();
+    }, function (err) {
+      if (timer) clearTimeout(timer);
+      throw err;
+    });
+  }
+
+  function isCors(err) {
+    var msg = String(err && (err.message || err) || "");
+    return !!(err && (err.name === "TypeError" || /cors|failed to fetch|networkerror/i.test(msg)));
+  }
+
   function asList(data) {
     if (Array.isArray(data)) return data;
-    if (data && Array.isArray(data.agents)) return data.agents;
+    if (!data || typeof data !== "object") return null;
+    if (data.ok === false) throw new Error("not-ok");
+    var body = data.data && typeof data.data === "object" ? data.data : data;
+    if (Array.isArray(body)) return body;
+    if (Array.isArray(body.agents)) return body.agents;
+    if (Array.isArray(data.agents)) return data.agents;
     return null;
+  }
+
+  function bioHtmlFromText(text) {
+    return String(text || "").replace(/\r\n/g, "\n").split(/\n\s*\n/).map(function (part) {
+      var trimmed = part.trim();
+      if (!trimmed) return "";
+      return "<p>" + esc(trimmed).replace(/\n/g, "<br>") + "</p>";
+    }).filter(Boolean).join("");
+  }
+
+  function safeImg(value) {
+    var v = String(value || "").trim();
+    if (/^https?:\/\//i.test(v)) return v;
+    if (v.charAt(0) === "/" || /^assets\//.test(v)) return v;
+    return "";
   }
 
   function normalizeAgent(raw) {
     if (!raw || typeof raw !== "object") return null;
-    var slug = String(raw.slug || "").trim();
+    var slug = String(raw.slug || "").trim().toLowerCase();
     var name = String(raw.name || "").trim();
-    if (!slug || !name) return null;
+    if (!slug || !name || !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug)) return null;
     var languages = [];
     if (Array.isArray(raw.languages)) {
       raw.languages.forEach(function (lang) {
@@ -252,26 +366,30 @@
         if (value) languages.push(value);
       });
     }
+    var source = Array.isArray(raw.links) ? raw.links : (Array.isArray(raw.social) ? raw.social : []);
     var social = [];
-    if (Array.isArray(raw.social)) {
-      raw.social.forEach(function (item) {
-        if (!item || !item.href) return;
-        social.push({ label: String(item.label || "Link"), href: String(item.href) });
-      });
-    }
+    source.forEach(function (item) {
+      if (!item) return;
+      var href = safeHttp(item.href);
+      if (!href) return;
+      social.push({ label: String(item.label || "Link").trim() || "Link", href: href });
+    });
+    var bioHtml = "";
+    if (typeof raw.bio === "string") bioHtml = bioHtmlFromText(raw.bio);
+    else if (typeof raw.bioHtml === "string") bioHtml = raw.bioHtml;
     return {
       slug: slug,
       name: name,
-      role: String(raw.role || ""),
+      role: String(raw.title || raw.role || ""),
       phone: String(raw.phone || ""),
       email: String(raw.email || ""),
-      web: String(raw.web || ""),
-      webLabel: String(raw.webLabel || ""),
+      web: safeHttp(raw.website || raw.web || ""),
+      webLabel: String(raw.websiteLabel || raw.webLabel || ""),
       dre: String(raw.dre || ""),
-      img: String(raw.img || raw.image || ""),
+      img: safeImg(raw.photoUrl || raw.img || ""),
       languages: languages,
       social: social,
-      bioHtml: String(raw.bioHtml || "")
+      bioHtml: bioHtml
     };
   }
 
@@ -281,33 +399,71 @@
     return list.map(normalizeAgent).filter(Boolean);
   }
 
-  function resolveFeed(feedUrl) {
-    var value = String(feedUrl || "").trim();
-    if (!value) return root() + "data/roster.json";
-    if (/^https?:\/\//i.test(value)) return value;
-    return root() + value.replace(/^\//, "");
+  function agentHref(slug) {
+    var known = window.ENESMA_STATIC_SLUGS || {};
+    if (known[slug]) return "agents/" + slug + "/";
+    return "agents/profile/?a=" + encodeURIComponent(slug);
   }
 
   function publish(list) {
-    window.ENESMA_AGENTS = list || [];
+    window.ENESMA_AGENTS = (list || []).map(function (agent) {
+      agent.pageHref = agentHref(agent.slug);
+      return agent;
+    });
     whenDom(mount);
     return window.ENESMA_AGENTS;
   }
 
-  var localUrl = root() + "data/roster.json";
+  var CACHE_KEY = "enesma_public_roster";
+  var CACHE_MS = 2 * 60 * 1000;
+
+  function readCache() {
+    try {
+      var parsed = JSON.parse(sessionStorage.getItem(CACHE_KEY) || "null");
+      if (!parsed || !parsed.at || !parsed.agents || !parsed.agents.length) return null;
+      if (Date.now() - parsed.at > CACHE_MS) return null;
+      return parsed.agents.map(normalizeAgent).filter(Boolean);
+    } catch (e) { return null; }
+  }
+
+  function writeCache(list) {
+    try {
+      sessionStorage.setItem(CACHE_KEY, JSON.stringify({ at: Date.now(), agents: list }));
+    } catch (e) {}
+  }
+
+  function loadLocal() {
+    return loadJson(root() + "data/roster.json", 6000).then(function (data) {
+      return publish(normalizeList(data));
+    });
+  }
+
+  function loadRemote(url) {
+    return loadJson(url, 6000).catch(function (err) {
+      if (!isCors(err)) throw err;
+      return postJson(url);
+    }).then(function (data) {
+      var list = normalizeList(data);
+      if (!list.length) throw new Error("empty");
+      writeCache(list);
+      return publish(list);
+    });
+  }
+
+  var localOnly = root() + "data/roster.json";
   window.ENESMA_AGENTS = window.ENESMA_AGENTS || [];
-  window.ENESMA_ROSTER_READY = loadJson(root() + "data/roster-feed.json").catch(function () {
+  window.ENESMA_STATIC_SLUGS = window.ENESMA_STATIC_SLUGS || {};
+  window.ENESMA_ROSTER_READY = loadJson(root() + "data/roster-feed.json", 6000).catch(function () {
     return { feedUrl: "" };
   }).then(function (cfg) {
-    var url = resolveFeed(cfg && cfg.feedUrl);
-    return loadJson(url).then(function (data) {
-      return publish(normalizeList(data));
-    }).catch(function () {
-      if (url === localUrl) throw new Error("local");
-      return loadJson(localUrl).then(function (data) {
-        return publish(normalizeList(data));
-      });
-    });
+    window.ENESMA_STATIC_SLUGS = {};
+    var known = (cfg && cfg.staticSlugs) || [];
+    for (var i = 0; i < known.length; i++) window.ENESMA_STATIC_SLUGS[String(known[i] || "").toLowerCase()] = true;
+    var feed = String((cfg && cfg.feedUrl) || "").trim();
+    if (!feed || feed === localOnly) return loadLocal();
+    var cached = readCache();
+    if (cached && cached.length) return publish(cached);
+    return loadRemote(feed).catch(function () { return loadLocal(); });
   }).catch(function () {
     return publish([]);
   });

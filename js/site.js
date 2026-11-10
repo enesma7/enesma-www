@@ -38,7 +38,7 @@
     var items = ['<a href="' + url("agents/") + '">All Agents</a>'];
     for (var i = 0; i < list.length; i++) {
       var agent = list[i];
-      items.push('<a href="' + url("agents/" + agent.slug + "/") + '">' + esc(agent.name) + "</a>");
+      items.push('<a href="' + url(agent.pageHref || ("agents/" + agent.slug + "/")) + '">' + esc(agent.name) + "</a>");
     }
     return items.join("");
   }
