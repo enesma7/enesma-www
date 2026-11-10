@@ -7,7 +7,7 @@ The Agent Hub is a separate product. It stays in [`enesma-agent-hub`](https://gi
 - **Custom domain:** `www.enesmarealty.com` (`CNAME` at the repo root)
 - **Pages source:** `main` branch, site root (`/`)
 - **Preview:** [https://enesma7.github.io/enesma-www/](https://enesma7.github.io/enesma-www/)
-- **Stack:** static HTML, CSS, and JS. No build step. `site.css` is cache-busted with `?v=8`. `site.js` is `?v=4`. `agents.js` is `?v=5`.
+- **Stack:** static HTML, CSS, and JS. No build step. `site.css` is cache-busted with `?v=9`. `site.js` is `?v=5`. `agents.js` is `?v=6`.
 
 ## Pages
 
@@ -17,9 +17,10 @@ The Agent Hub is a separate product. It stays in [`enesma-agent-hub`](https://gi
 | `/buy/` | Buyer inquiry. One full-page form button |
 | `/sell/` | Seller inquiry |
 | `/refinance/` | Refinance inquiry |
-| `/agents/` | Roster from `data/roster.json`, unless `data/roster-feed.json` points at another feed |
-| `/agents/enrique-esparza/` | Broker page. Direct line (909) 212-2994 |
-| `/agents/lilia-amador/` | Agent page |
+| `/agents/` | Live roster from the public feed, with `data/roster.json` as the fallback |
+| `/agents/profile/?a=<slug>` | Profile for an agent who does not have a static folder yet |
+| `/agents/enrique-esparza/` | Broker page. Hydrates from the feed. Direct line (909) 212-2994 |
+| `/agents/lilia-amador/` | Agent page. Hydrates from the feed |
 | `/join/` | Join the team. `#join-calculator` is reserved for a later calculator embed |
 | `/contact/` | Office line (909) 566-0505 and enrique@enesmabroker.com |
 
@@ -31,14 +32,11 @@ Profiles share one template. Append one object to the `agents` array in `data/ro
 
 ## Roster feed
 
-`data/roster-feed.json` is the only switch:
+`data/roster-feed.json` points `feedUrl` at the shared public roster. The browser GETs that URL and follows redirects. If the GET fails because of CORS, it POSTs `{"action":"publicAgents"}` as `text/plain;charset=utf-8`. A successful list is kept in `sessionStorage` for two minutes.
 
-- `feedUrl` empty: the site loads `data/roster.json`.
-- `feedUrl` set to an absolute URL: the site loads that JSON instead, and falls back to `data/roster.json` if the request fails.
+The site uses `data/roster.json` when the feed fails, times out after about six seconds, returns `ok: false`, or returns no agents. A slug that is missing from a successful feed shows “Agent Not Found” and a link back to the roster. It does not keep the old profile.
 
-The feed may be `{ "agents": [ ... ] }` or a bare array. Each agent uses `slug`, `name`, `role`, `phone`, `email`, `web`, `webLabel`, `dre`, `img`, `languages`, `social` (`label`, `href`), and `bioHtml`. On a remote feed, `img` should be an absolute URL. `languages` is an array of names such as `"English"` and `"Spanish"`. The Meet Our Agents page searches `name` and filters on `languages`. A tile shows the photo, name, title, DRE, phone, and email, and links to that agent’s page. Social icons, website, languages, and the bio stay on the profile.
-
-When the Agent Hub public roster is live, set `feedUrl` to that URL. No other file needs to change.
+`staticSlugs` are folders that already exist under `agents/`. Every other tile links to `/agents/profile/?a=<slug>`. A missing `/agents/<slug>/` address is also handled by `404.html`, which renders the same profile from the feed. The feed’s plain-text `bio` is escaped and split into paragraphs. `id` is never shown.
 
 ## Lead forms
 

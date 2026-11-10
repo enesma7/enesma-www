@@ -761,6 +761,7 @@ body.nav-lock { overflow: hidden; }
   margin: 0 auto;
   text-align: left;
 }
+.agent .bio { text-align: center; }
 .bio p { margin: 0 0 16px; line-height: 1.65; }
 .bio strong { font-weight: 700; }
 

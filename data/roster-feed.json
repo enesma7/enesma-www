@@ -1,4 +1,5 @@
 {
-  "_comment": "Point feedUrl at the Agent Hub public roster when that feed is live. Leave it empty to use data/roster.json on this site. The feed may be { \"agents\": [] } or a bare array. Each agent uses slug, name, role, phone, email, web, webLabel, dre, img, languages, social [{label, href}], and bioHtml. For a remote feed, img should be an absolute URL. languages is an array of language names, used by the Meet Our Agents filter.",
-  "feedUrl": ""
+  "_comment": "feedUrl is the shared public roster. staticSlugs are profile folders that already exist in this site. Every other agent opens at /agents/profile/?a=<slug>. If the feed fails, times out, returns ok:false, or returns no agents, the site uses data/roster.json.",
+  "feedUrl": "https://script.google.com/macros/s/AKfycbzYtmzYv74D0yi0sVy-_JaLDYlNLSU795sqhREsqbGYYU1BEDR5KDAB7Du9Mm0Gp4ba/exec?action=publicAgents",
+  "staticSlugs": ["enrique-esparza", "lilia-amador"]
 }
