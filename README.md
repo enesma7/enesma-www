@@ -7,17 +7,17 @@ The Agent Hub is a separate product. It stays in [`enesma-agent-hub`](https://gi
 - **Custom domain:** `www.enesmarealty.com` (`CNAME` at the repo root)
 - **Pages source:** `main` branch, site root (`/`)
 - **Preview:** [https://enesma7.github.io/enesma-www/](https://enesma7.github.io/enesma-www/)
-- **Stack:** static HTML, CSS, and JS. No build step. `site.css` and `site.js` are cache-busted with `?v=3`.
+- **Stack:** static HTML, CSS, and JS. No build step. `site.css` and `site.js` are cache-busted with `?v=4`. `agents.js` is `?v=3`.
 
 ## Pages
 
 | Route | Purpose |
 | --- | --- |
-| `/` | Home. Full-bleed hero and six photo tiles: Buy, Sell, Refinance, Join, Agents, Contact |
+| `/` | Home. Video hero (Hub SoCal clip loop) and six photo tiles: Buy, Sell, Refinance, Join, Agents, Contact |
 | `/buy/` | Buyer inquiry. One full-page form button |
 | `/sell/` | Seller inquiry |
 | `/refinance/` | Refinance inquiry |
-| `/agents/` | Roster rendered from `js/agents.js` |
+| `/agents/` | Roster from `data/roster.json`, unless `data/roster-feed.json` points at another feed |
 | `/agents/enrique-esparza/` | Broker page. Direct line (909) 212-2994 |
 | `/agents/lilia-amador/` | Agent page |
 | `/join/` | Join the team. `#join-calculator` is reserved for a later calculator embed |
@@ -27,7 +27,18 @@ Shared header and footer live in `js/site.js`. The header is a sticky black bar.
 
 ## Adding an agent
 
-Profiles share one template. Append one object to `ENESMA_AGENTS` in `js/agents.js` (photo, name, contact, socials, Zillow bio). Then copy `agents/enrique-esparza/index.html` to `agents/<slug>/index.html`, set `data-agent` to that slug, and update the title. The roster and the Agents menu pick up the new entry. Do not invent a bio.
+Profiles share one template. Append one object to the `agents` array in `data/roster.json` (photo, name, contact, `languages`, socials, Zillow bio). Then copy `agents/enrique-esparza/index.html` to `agents/<slug>/index.html`, set `data-agent` to that slug, and update the title. The roster, the language filter, and the Agents menu pick up the new entry. Do not invent a bio.
+
+## Roster feed
+
+`data/roster-feed.json` is the only switch:
+
+- `feedUrl` empty: the site loads `data/roster.json`.
+- `feedUrl` set to an absolute URL: the site loads that JSON instead, and falls back to `data/roster.json` if the request fails.
+
+The feed may be `{ "agents": [ ... ] }` or a bare array. Each agent uses `slug`, `name`, `role`, `phone`, `email`, `web`, `webLabel`, `dre`, `img`, `languages`, `social` (`label`, `href`), and `bioHtml`. On a remote feed, `img` should be an absolute URL. `languages` is an array of names such as `"English"` and `"Spanish"`. The Meet Our Agents page searches `name` and filters on `languages`.
+
+When the Agent Hub public roster is live, set `feedUrl` to that URL. No other file needs to change.
 
 ## Lead forms
 

@@ -1,12 +1,14 @@
-/* Public agent profiles. One entry renders the roster, the Agents menu,
-   and /agents/<slug>/. Copy matches Agent Hub (Zillow bios, personal
-   contact, socials). Office phone (909) 566-0505 stays on the brokerage
-   footer and Contact page, not on an agent's own line.
+/* Public agent profiles. The roster, the Agents menu, and /agents/<slug>/
+   all read one feed. data/roster-feed.json chooses the URL. An empty
+   feedUrl uses data/roster.json. Point feedUrl at the Agent Hub public
+   roster when that feed is live. Office phone (909) 566-0505 stays on the
+   brokerage footer and Contact page, not on an agent's own line.
 
    Add an agent:
-   1. Append one object to ENESMA_AGENTS (photo under assets/agents/).
+   1. Append one object to data/roster.json (photo under assets/agents/).
    2. Copy agents/enrique-esparza/index.html to agents/<slug>/index.html
-      and set data-agent="<slug>". Update the <title>. */
+      and set data-agent="<slug>". Update the <title>. Do not invent a bio.
+*/
 (function () {
   var SOCIAL_ICONS = {
   "facebook": "M9.101 23.691v-7.98H6.627v-3.667h2.474v-1.58c0-4.085 1.848-5.978 5.858-5.978.401 0 .955.042 1.468.103a8.68 8.68 0 0 1 1.141.195v3.325a8.623 8.623 0 0 0-.653-.036 26.805 26.805 0 0 0-.733-.009c-.707 0-1.259.096-1.675.309a1.686 1.686 0 0 0-.679.622c-.258.42-.374.995-.374 1.752v1.297h3.919l-.386 2.103-.287 1.564h-3.246v8.245C19.396 23.238 24 18.179 24 12.044c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.628 3.874 10.35 9.101 11.647Z",
@@ -18,76 +20,10 @@
   "zillow": "M12.006 0L1.086 8.627v3.868c3.386-2.013 11.219-5.13 14.763-6.015.11-.024.16.005.227.078.372.427 1.586 1.899 1.916 2.301a.128.128 0 0 1-.03.195 43.607 43.607 0 0 0-6.67 6.527c-.03.037-.006.043.012.03 2.642-1.134 8.828-2.94 11.622-3.452V8.627zm-.48 11.177c-2.136.708-8.195 3.307-10.452 4.576V24h21.852v-7.936c-2.99.506-11.902 3.16-15.959 5.246a.183.183 0 0 1-.23-.036l-2.044-2.429c-.055-.061-.062-.098.011-.208 1.574-2.3 4.789-5.899 6.833-7.418.042-.03.031-.06-.012-.042Z"
 };
 
-  var ENESMA_AGENTS = [
-  {
-    "slug": "enrique-esparza",
-    "name": "Enrique Esparza",
-    "role": "Broker / Owner",
-    "phone": "(909) 212-2994",
-    "email": "enrique@enesmabroker.com",
-    "web": "https://enriqueesparza.com",
-    "webLabel": "enriqueesparza.com",
-    "dre": "01926362",
-    "img": "assets/agents/enrique.jpg",
-    "social": [
-      {
-        "label": "Facebook",
-        "href": "https://www.facebook.com/enesma7/"
-      },
-      {
-        "label": "Instagram",
-        "href": "https://www.instagram.com/enesma7/"
-      },
-      {
-        "label": "TikTok",
-        "href": "https://www.tiktok.com/@enesma7"
-      },
-      {
-        "label": "X",
-        "href": "https://x.com/enesma909"
-      },
-      {
-        "label": "LinkedIn",
-        "href": "https://www.linkedin.com/in/enesma7"
-      },
-      {
-        "label": "YouTube",
-        "href": "https://www.youtube.com/@enesma7"
-      },
-      {
-        "label": "Zillow",
-        "href": "https://www.zillow.com/profile/ENESMA#reviews"
-      }
-    ],
-    "bioHtml": "<p>With over 13 years of experience and over 100 closed transactions, I’ve built my real estate business on two principles: <strong>integrity first, results always.</strong> For me, real estate is about more than buying and selling properties. It’s about building lasting relationships, earning trust, and helping people make confident decisions about their future.</p>\n<p>As a bilingual professional fluent in English and Spanish, I enjoy working with first-time homebuyers, sellers, investors, and homeowners navigating short sales and foreclosures. My clients know they can count on me for honest advice, responsive communication, and in-depth knowledge of the Southern California real estate market. I take pride in going the extra mile to make every transaction as smooth and stress-free as possible.</p>\n<p>Whether you're buying your first home, selling a property, or exploring investment opportunities, I’m committed to understanding your goals and helping you achieve them. I proudly serve clients throughout Southern California, bringing local market expertise, personalized guidance, and a commitment to getting results. More than 77% of my business comes from referrals, which I consider one of the greatest compliments I can receive. The trust my clients place in me is something I work hard to earn with every transaction.</p>\n\n<p><strong>Whether you're ready to make a move or just exploring your options, I’m always happy to talk and help you plan your next step.</strong> </p>"
-  },
-  {
-    "slug": "lilia-amador",
-    "name": "Lilia Amador",
-    "role": "REALTOR®",
-    "phone": "(909) 550-8755",
-    "email": "realtorlilia1@gmail.com",
-    "web": "https://liliaamador.com",
-    "webLabel": "LiliaAmador.com",
-    "dre": "02022136",
-    "img": "assets/agents/lilia.jpg",
-    "social": [
-      {
-        "label": "Facebook",
-        "href": "https://www.facebook.com/p/Lilia-Amador-Realtor-100057598563607/"
-      },
-      {
-        "label": "Instagram",
-        "href": "https://www.instagram.com/my_realtor_lilia/"
-      },
-      {
-        "label": "Zillow",
-        "href": "https://www.zillow.com/profile/Lilia%20Amador#reviews"
-      }
-    ],
-    "bioHtml": "<p>When it comes to Real Estate look no futher than me .I offer good old fashioned customer service with todays technology .</p>"
-  }
-];
+
+  /* Roster comes from data/roster-feed.json. An empty feedUrl uses
+     data/roster.json. Set feedUrl to the Agent Hub public roster URL
+     when that feed is live. See the README. */
 
   function esc(s) {
     return String(s == null ? "" : s)
@@ -100,6 +36,7 @@
   function root() {
     var body = document.body;
     if (body && body.hasAttribute("data-root")) return body.getAttribute("data-root");
+    if (window.__ENESMA_BASE) return window.__ENESMA_BASE;
     return "";
   }
 
@@ -116,8 +53,9 @@
   }
 
   function bySlug(slug) {
-    for (var i = 0; i < ENESMA_AGENTS.length; i++) {
-      if (ENESMA_AGENTS[i].slug === slug) return ENESMA_AGENTS[i];
+    var list = window.ENESMA_AGENTS || [];
+    for (var i = 0; i < list.length; i++) {
+      if (list[i].slug === slug) return list[i];
     }
     return null;
   }
@@ -129,23 +67,36 @@
     }).join("");
   }
 
+  function resolveImg(img) {
+    var value = String(img || "");
+    if (!value) return "";
+    if (/^(https?:|data:)/i.test(value)) return value;
+    if (value.charAt(0) === "/") return value;
+    return root() + value;
+  }
+
+  function contactHtml(a) {
+    var bits = [];
+    if (a.phone) bits.push('<a href="' + telHref(a.phone) + '">' + esc(a.phone) + "</a>");
+    if (a.email) bits.push('<a href="mailto:' + esc(a.email) + '">' + esc(a.email) + "</a>");
+    if (a.web) bits.push('<a href="' + esc(a.web) + '" target="_blank" rel="noopener noreferrer">' + esc(a.webLabel || a.web) + "</a>");
+    if (!bits.length) return "";
+    return '<p class="agent-contact">' + bits.join("") + "</p>";
+  }
+
   function profileHtml(a) {
     var base = root();
     return (
       '<section class="page-body agent-layout">' +
         '<div class="shell">' +
-          '<p class="back"><a href="' + base + 'agents/">ALL AGENTS</a></p>' +
+          '<p class="back"><a href="' + base + 'agents/">All Agents</a></p>' +
           '<article class="agent">' +
-            '<img src="' + esc(base + a.img) + '" width="700" height="700" alt="Portrait of ' + esc(a.name) + '">' +
+            '<img src="' + esc(resolveImg(a.img)) + '" width="700" height="700" alt="Portrait of ' + esc(a.name) + '">' +
             '<div class="agent-body">' +
-              '<p class="agent-kicker">AGENT</p>' +
+              '<p class="agent-kicker">Agent</p>' +
               '<h1 class="agent-name">' + esc(a.name) + "</h1>" +
               '<p class="agent-role">' + esc(a.role) + " · DRE# " + esc(a.dre) + "</p>" +
-              '<p class="agent-contact">' +
-                '<a href="' + telHref(a.phone) + '">' + esc(a.phone) + "</a>" +
-                '<a href="mailto:' + esc(a.email) + '">' + esc(a.email) + "</a>" +
-                '<a href="' + esc(a.web) + '" target="_blank" rel="noopener noreferrer">' + esc(a.webLabel) + "</a>" +
-              "</p>" +
+              contactHtml(a) +
               '<div class="socials">' + socialRow(a.social) + "</div>" +
               '<div class="bio">' + (a.bioHtml || "") + "</div>" +
             "</div>" +
@@ -155,17 +106,88 @@
     );
   }
 
+  function rosterCard(a) {
+    var href = esc(a.slug) + "/";
+    var langs = a.languages || [];
+    var langLine = langs.length ? '<p class="agent-langs">' + esc(langs.join(" · ")) + "</p>" : "";
+    return (
+      '<article class="agent-card" data-name="' + esc(a.name) + '" data-languages="' + esc(langs.join("|")) + '">' +
+        '<a class="agent-photo" href="' + href + '">' +
+          '<img src="' + esc(resolveImg(a.img)) + '" width="700" height="700" alt="Portrait of ' + esc(a.name) + '">' +
+        "</a>" +
+        "<h2><a href=\"" + href + "\">" + esc(a.name) + "</a></h2>" +
+        '<p class="agent-role">' + esc(a.role) + " · DRE# " + esc(a.dre) + "</p>" +
+        langLine +
+        contactHtml(a) +
+        '<div class="socials">' + socialRow(a.social) + "</div>" +
+        '<div class="bio">' + (a.bioHtml || "") + "</div>" +
+      "</article>"
+    );
+  }
+
   function rosterHtml() {
-    var base = root();
-    return ENESMA_AGENTS.map(function (a) {
-      return (
-        '<a class="agent-card" href="' + esc(a.slug) + '/">' +
-          '<img src="' + esc(base + a.img) + '" width="700" height="700" alt="Portrait of ' + esc(a.name) + '">' +
-          "<h2>" + esc(a.name) + "</h2>" +
-          "<p>" + esc(String(a.role || "").toUpperCase()) + " · DRE# " + esc(a.dre) + "</p>" +
-        "</a>"
-      );
-    }).join("");
+    return (window.ENESMA_AGENTS || []).map(rosterCard).join("");
+  }
+
+  function applyRosterFilter() {
+    var roster = document.getElementById("agent-roster");
+    var search = document.getElementById("agent-search");
+    var language = document.getElementById("agent-language");
+    var empty = document.getElementById("agent-empty");
+    if (!roster) return;
+    var q = search ? String(search.value || "").trim().toLowerCase() : "";
+    var lang = language ? String(language.value || "") : "";
+    var cards = roster.querySelectorAll(".agent-card");
+    var shown = 0;
+    for (var i = 0; i < cards.length; i++) {
+      var name = String(cards[i].getAttribute("data-name") || "").toLowerCase();
+      var langs = String(cards[i].getAttribute("data-languages") || "").split("|").filter(Boolean);
+      var okName = !q || name.indexOf(q) !== -1;
+      var okLang = !lang || langs.indexOf(lang) !== -1;
+      var show = okName && okLang;
+      cards[i].hidden = !show;
+      if (show) shown += 1;
+    }
+    if (empty) empty.hidden = shown !== 0;
+  }
+
+  function fillLanguages() {
+    var language = document.getElementById("agent-language");
+    if (!language) return;
+    var seen = {};
+    var names = [];
+    (window.ENESMA_AGENTS || []).forEach(function (a) {
+      (a.languages || []).forEach(function (lang) {
+        if (!lang || seen[lang]) return;
+        seen[lang] = true;
+        names.push(lang);
+      });
+    });
+    names.sort(function (a, b) { return a.localeCompare(b); });
+    var current = language.value;
+    language.innerHTML = '<option value="">All Languages</option>';
+    names.forEach(function (lang) {
+      var opt = document.createElement("option");
+      opt.value = lang;
+      opt.textContent = lang;
+      language.appendChild(opt);
+    });
+    if (current && seen[current]) language.value = current;
+  }
+
+  function bindRoster() {
+    var search = document.getElementById("agent-search");
+    var language = document.getElementById("agent-language");
+    if (search && !search._enesmaBound) {
+      search._enesmaBound = true;
+      search.addEventListener("input", applyRosterFilter);
+    }
+    if (language && !language._enesmaBound) {
+      language._enesmaBound = true;
+      language.addEventListener("change", applyRosterFilter);
+    }
+    fillLanguages();
+    applyRosterFilter();
   }
 
   function mount() {
@@ -176,7 +198,7 @@
     if (slug && main) {
       var agent = bySlug(slug);
       if (!agent) {
-        main.innerHTML = '<section class="not-found"><div class="shell"><p>That agent is not on this site.</p><p><a href="' + root() + 'agents/">All agents</a></p></div></section>';
+        main.innerHTML = '<section class="not-found"><div class="shell"><p>That agent is not on this site.</p><p><a href="' + root() + 'agents/">All Agents</a></p></div></section>';
         return;
       }
       document.title = agent.name + " · ENESMA Realty";
@@ -184,10 +206,109 @@
       return;
     }
     var roster = document.getElementById("agent-roster");
-    if (roster) roster.innerHTML = rosterHtml();
+    if (roster) {
+      if (!(window.ENESMA_AGENTS || []).length) {
+        roster.innerHTML = '<p class="roster-empty">Agents Are Temporarily Unavailable.</p>';
+      } else {
+        roster.innerHTML = rosterHtml();
+      }
+      bindRoster();
+    }
   }
 
-  window.ENESMA_AGENTS = ENESMA_AGENTS;
-  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", mount);
-  else mount();
+  function whenDom(fn) {
+    if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", fn);
+    else fn();
+  }
+
+  function loadJson(url) {
+    var ctrl = typeof AbortController === "function" ? new AbortController() : null;
+    var timer = ctrl ? setTimeout(function () { ctrl.abort(); }, 5000) : 0;
+    return fetch(url, { credentials: "omit", signal: ctrl ? ctrl.signal : undefined }).then(function (res) {
+      if (timer) clearTimeout(timer);
+      if (!res.ok) throw new Error(String(res.status));
+      return res.json();
+    }, function (err) {
+      if (timer) clearTimeout(timer);
+      throw err;
+    });
+  }
+
+  function asList(data) {
+    if (Array.isArray(data)) return data;
+    if (data && Array.isArray(data.agents)) return data.agents;
+    return null;
+  }
+
+  function normalizeAgent(raw) {
+    if (!raw || typeof raw !== "object") return null;
+    var slug = String(raw.slug || "").trim();
+    var name = String(raw.name || "").trim();
+    if (!slug || !name) return null;
+    var languages = [];
+    if (Array.isArray(raw.languages)) {
+      raw.languages.forEach(function (lang) {
+        var value = String(lang || "").trim();
+        if (value) languages.push(value);
+      });
+    }
+    var social = [];
+    if (Array.isArray(raw.social)) {
+      raw.social.forEach(function (item) {
+        if (!item || !item.href) return;
+        social.push({ label: String(item.label || "Link"), href: String(item.href) });
+      });
+    }
+    return {
+      slug: slug,
+      name: name,
+      role: String(raw.role || ""),
+      phone: String(raw.phone || ""),
+      email: String(raw.email || ""),
+      web: String(raw.web || ""),
+      webLabel: String(raw.webLabel || ""),
+      dre: String(raw.dre || ""),
+      img: String(raw.img || raw.image || ""),
+      languages: languages,
+      social: social,
+      bioHtml: String(raw.bioHtml || "")
+    };
+  }
+
+  function normalizeList(data) {
+    var list = asList(data);
+    if (!list) throw new Error("shape");
+    return list.map(normalizeAgent).filter(Boolean);
+  }
+
+  function resolveFeed(feedUrl) {
+    var value = String(feedUrl || "").trim();
+    if (!value) return root() + "data/roster.json";
+    if (/^https?:\/\//i.test(value)) return value;
+    return root() + value.replace(/^\//, "");
+  }
+
+  function publish(list) {
+    window.ENESMA_AGENTS = list || [];
+    whenDom(mount);
+    return window.ENESMA_AGENTS;
+  }
+
+  var localUrl = root() + "data/roster.json";
+  window.ENESMA_AGENTS = window.ENESMA_AGENTS || [];
+  window.ENESMA_ROSTER_READY = loadJson(root() + "data/roster-feed.json").catch(function () {
+    return { feedUrl: "" };
+  }).then(function (cfg) {
+    var url = resolveFeed(cfg && cfg.feedUrl);
+    return loadJson(url).then(function (data) {
+      return publish(normalizeList(data));
+    }).catch(function () {
+      if (url === localUrl) throw new Error("local");
+      return loadJson(localUrl).then(function (data) {
+        return publish(normalizeList(data));
+      });
+    });
+  }).catch(function () {
+    return publish([]);
+  });
 })();

@@ -1,0 +1,77 @@
+{
+  "agents": [
+    {
+      "slug": "enrique-esparza",
+      "name": "Enrique Esparza",
+      "role": "Broker / Owner",
+      "phone": "(909) 212-2994",
+      "email": "enrique@enesmabroker.com",
+      "web": "https://enriqueesparza.com",
+      "webLabel": "enriqueesparza.com",
+      "dre": "01926362",
+      "img": "assets/agents/enrique.jpg",
+      "languages": [
+        "English",
+        "Spanish"
+      ],
+      "social": [
+        {
+          "label": "Facebook",
+          "href": "https://www.facebook.com/enesma7/"
+        },
+        {
+          "label": "Instagram",
+          "href": "https://www.instagram.com/enesma7/"
+        },
+        {
+          "label": "TikTok",
+          "href": "https://www.tiktok.com/@enesma7"
+        },
+        {
+          "label": "X",
+          "href": "https://x.com/enesma909"
+        },
+        {
+          "label": "LinkedIn",
+          "href": "https://www.linkedin.com/in/enesma7"
+        },
+        {
+          "label": "YouTube",
+          "href": "https://www.youtube.com/@enesma7"
+        },
+        {
+          "label": "Zillow",
+          "href": "https://www.zillow.com/profile/ENESMA#reviews"
+        }
+      ],
+      "bioHtml": "<p>With over 13 years of experience and over 100 closed transactions, I’ve built my real estate business on two principles: <strong>integrity first, results always.</strong> For me, real estate is about more than buying and selling properties. It’s about building lasting relationships, earning trust, and helping people make confident decisions about their future.</p>\n<p>As a bilingual professional fluent in English and Spanish, I enjoy working with first-time homebuyers, sellers, investors, and homeowners navigating short sales and foreclosures. My clients know they can count on me for honest advice, responsive communication, and in-depth knowledge of the Southern California real estate market. I take pride in going the extra mile to make every transaction as smooth and stress-free as possible.</p>\n<p>Whether you're buying your first home, selling a property, or exploring investment opportunities, I’m committed to understanding your goals and helping you achieve them. I proudly serve clients throughout Southern California, bringing local market expertise, personalized guidance, and a commitment to getting results. More than 77% of my business comes from referrals, which I consider one of the greatest compliments I can receive. The trust my clients place in me is something I work hard to earn with every transaction.</p>\n\n<p><strong>Whether you're ready to make a move or just exploring your options, I’m always happy to talk and help you plan your next step.</strong> </p>"
+    },
+    {
+      "slug": "lilia-amador",
+      "name": "Lilia Amador",
+      "role": "REALTOR®",
+      "phone": "(909) 550-8755",
+      "email": "realtorlilia1@gmail.com",
+      "web": "https://liliaamador.com",
+      "webLabel": "LiliaAmador.com",
+      "dre": "02022136",
+      "img": "assets/agents/lilia.jpg",
+      "languages": [],
+      "social": [
+        {
+          "label": "Facebook",
+          "href": "https://www.facebook.com/p/Lilia-Amador-Realtor-100057598563607/"
+        },
+        {
+          "label": "Instagram",
+          "href": "https://www.instagram.com/my_realtor_lilia/"
+        },
+        {
+          "label": "Zillow",
+          "href": "https://www.zillow.com/profile/Lilia%20Amador#reviews"
+        }
+      ],
+      "bioHtml": "<p>When it comes to Real Estate look no futher than me .I offer good old fashioned customer service with todays technology .</p>"
+    }
+  ]
+}

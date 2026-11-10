@@ -35,7 +35,7 @@
 
   function agentMenu() {
     var list = window.ENESMA_AGENTS || [];
-    var items = ['<a href="' + url("agents/") + '">All agents</a>'];
+    var items = ['<a href="' + url("agents/") + '">All Agents</a>'];
     for (var i = 0; i < list.length; i++) {
       var agent = list[i];
       items.push('<a href="' + url("agents/" + agent.slug + "/") + '">' + esc(agent.name) + "</a>");
@@ -70,7 +70,9 @@
         '<button class="menu-btn" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Open menu">' +
           "<span></span><span></span><span></span>" +
         "</button>" +
-        '<nav id="site-nav" class="nav" aria-label="Primary">' + links + "</nav>" +
+        '<nav id="site-nav" class="nav" aria-label="Primary">' + links +
+          '<a class="nav-login" href="https://agent.enesmarealty.com">Agent Login</a>' +
+        "</nav>" +
       "</header>"
     );
   }
@@ -259,11 +261,275 @@
     }
   }
 
+  var HERO_BASE = "https://agent.enesmarealty.com/assets/hero/";
+  var HERO_CLIPS = [
+    "hero-01-santa-monica.mp4",
+    "hero-02-hollywood.mp4",
+    "hero-03-downtown-la.mp4",
+    "hero-04-big-bear.mp4",
+    "hero-05-palm-springs.mp4",
+    "hero-06-palos-verdes.mp4",
+    "hero-07-catalina.mp4",
+    "hero-08-marina-del-rey.mp4",
+    "hero-09-beverly-hills.mp4",
+    "hero-10-long-beach.mp4",
+    "hero-11-redondo-beach.mp4",
+    "hero-12-san-diego.mp4"
+  ];
+
+  function heroSrc(index) {
+    return HERO_BASE + HERO_CLIPS[index] + "?v=2";
+  }
+
+  function prepHeroVideo(v) {
+    v.muted = true;
+    v.defaultMuted = true;
+    v.playsInline = true;
+    v.preload = "auto";
+    v.setAttribute("muted", "");
+    v.setAttribute("playsinline", "");
+    v.setAttribute("webkit-playsinline", "");
+    v.removeAttribute("poster");
+  }
+
+  function bindHero() {
+    var box = document.querySelector(".hero-videos");
+    if (!box) return;
+    var hero = box.closest(".home-hero");
+    var clips = HERO_CLIPS.map(function (_, i) { return heroSrc(i); });
+    var slots = box.querySelectorAll("video");
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      box.classList.add("off");
+      for (var r = 0; r < slots.length; r++) {
+        slots[r].removeAttribute("autoplay");
+        slots[r].removeAttribute("src");
+        slots[r].removeAttribute("poster");
+        try { slots[r].pause(); } catch (e) {}
+      }
+      return;
+    }
+    if (slots.length < 2 || !clips.length) return;
+    for (var s = 0; s < slots.length; s++) prepHeroVideo(slots[s]);
+    var active = 0;
+    var clipAt = [0, 1 % clips.length];
+    var fading = false;
+    var fadeMs = 1600;
+    slots[0]._heroSrc = slots[0]._heroSrc || clips[0];
+    slots[1]._heroSrc = slots[1]._heroSrc || clips[1 % clips.length];
+
+    function showGesture() {
+      if (hero) hero.classList.add("needs-gesture");
+    }
+    function clearGesture() {
+      if (hero) hero.classList.remove("needs-gesture");
+    }
+    function autoplayBlocked(err) {
+      if (!err || err.name === "NotAllowedError") return true;
+      return /not allowed|user gesture|interact with|user agent/i.test(String(err && err.message || ""));
+    }
+    function restack() {
+      for (var i = 0; i < slots.length; i++) {
+        var v = slots[i];
+        var top = i === active;
+        v.classList.toggle("over", top);
+        v.classList.toggle("under", !top);
+        v.classList.toggle("on", top);
+        if (!v.classList.contains("fading")) v.style.opacity = "1";
+      }
+    }
+    function arm(el, src) {
+      prepHeroVideo(el);
+      el.autoplay = false;
+      el.removeAttribute("autoplay");
+      if (el._heroSrc === src && el.getAttribute("src")) return;
+      el._heroSrc = src;
+      el.src = src;
+      el.addEventListener("loadeddata", function parkFrame() {
+        if (el.classList.contains("over")) return;
+        try {
+          if (el.currentTime < 0.001) el.currentTime = 0.001;
+        } catch (e) {}
+        try { el.pause(); } catch (e) {}
+      }, { once: true });
+    }
+    function play(v) {
+      if (!v || box.classList.contains("off")) return;
+      prepHeroVideo(v);
+      v.autoplay = true;
+      var wasLoop = v.loop || v.hasAttribute("loop");
+      v.loop = false;
+      v.removeAttribute("loop");
+      if (wasLoop && isFinite(v.duration) && v.currentTime > v.duration - fadeMs / 1000 - 0.3) {
+        try { v.currentTime = 0.05; } catch (e) {}
+      }
+      v.setAttribute("autoplay", "");
+      box.classList.remove("off");
+      v.classList.add("on", "over");
+      var result = v.play();
+      if (result && result.then) {
+        result.then(function () { clearGesture(); }).catch(function (err) {
+          if (err && err.name === "AbortError") return;
+          if (autoplayBlocked(err)) showGesture();
+        });
+      }
+      return result;
+    }
+    function goNext() {
+      if (fading || box.classList.contains("off")) return;
+      fading = true;
+      var outgoing = active;
+      var incoming = outgoing ? 0 : 1;
+      var incomingClip = clipAt[incoming];
+      var prev = slots[outgoing];
+      var next = slots[incoming];
+      var started = false;
+      function begin() {
+        if (started || !next.isConnected) return;
+        if (!(next.videoWidth > 1)) return;
+        started = true;
+        next.removeEventListener("playing", onPlaying);
+        prev.classList.add("over", "fading");
+        next.classList.add("under");
+        next.classList.remove("over");
+        prev.style.opacity = "1";
+        void prev.offsetWidth;
+        prev.style.opacity = "0";
+        active = incoming;
+        setTimeout(function () {
+          if (!next.isConnected) { fading = false; return; }
+          prev.classList.remove("fading", "over", "on");
+          prev.classList.add("under");
+          prev.style.opacity = "1";
+          next.classList.remove("under");
+          next.classList.add("over", "on");
+          try { prev.pause(); } catch (e) {}
+          var follow = (incomingClip + 1) % clips.length;
+          arm(prev, clips[follow]);
+          clipAt[outgoing] = follow;
+          fading = false;
+        }, fadeMs);
+      }
+      function onPlaying() { begin(); }
+      next.addEventListener("playing", onPlaying);
+      prepHeroVideo(next);
+      next.autoplay = true;
+      try {
+        if (next.currentTime > 0.2 || next.currentTime < 0.001) next.currentTime = 0.001;
+      } catch (e) {}
+      var result = next.play();
+      if (result && result.then) {
+        result.then(function () { if (next.videoWidth > 1) begin(); }).catch(function (err) {
+          if (err && err.name === "AbortError") return;
+          if (autoplayBlocked(err)) showGesture();
+        });
+      }
+      setTimeout(function () {
+        if (started || !next.isConnected) return;
+        fading = false;
+        next.removeEventListener("playing", onPlaying);
+        try { next.pause(); } catch (e) {}
+        restack();
+      }, 1200);
+    }
+    for (var i = 0; i < slots.length; i++) {
+      (function (v) {
+        v.addEventListener("playing", function () {
+          if (v === slots[active]) clearGesture();
+        });
+        v.addEventListener("error", function () {
+          if (v !== slots[active] || fading) return;
+          goNext();
+        });
+        v.addEventListener("timeupdate", function () {
+          if (v !== slots[active] || fading || !isFinite(v.duration)) return;
+          if (v.currentTime >= v.duration - fadeMs / 1000) goNext();
+        });
+        v.addEventListener("ended", function () {
+          if (v === slots[active]) goNext();
+        });
+      })(slots[i]);
+    }
+    if (!slots[1].getAttribute("src")) arm(slots[1], clips[clipAt[1]]);
+    else {
+      (function (el) {
+        function park() {
+          if (el.classList.contains("over")) return;
+          try { if (el.currentTime < 0.001) el.currentTime = 0.001; } catch (e) {}
+          try { el.pause(); } catch (e) {}
+        }
+        if (el.readyState >= 2) park();
+        else el.addEventListener("loadeddata", park, { once: true });
+      })(slots[1]);
+    }
+    restack();
+    box.classList.remove("off");
+    if (hero && !hero._heroClick) {
+      hero._heroClick = true;
+      hero.addEventListener("click", function () {
+        if (!hero.classList.contains("needs-gesture")) return;
+        play(slots[active]);
+      });
+    }
+    if ("IntersectionObserver" in window && hero) {
+      var io = new IntersectionObserver(function (ents) {
+        var vis = ents[0] && ents[0].isIntersecting;
+        if (!vis) {
+          if (fading) return;
+          for (var n = 0; n < slots.length; n++) {
+            try { slots[n].pause(); } catch (e) {}
+          }
+        } else {
+          play(slots[active]);
+        }
+      }, { threshold: 0.2 });
+      io.observe(hero);
+    }
+    play(slots[active]);
+  }
+
+  function bindPromo() {
+    var nodes = document.querySelectorAll("video[data-autoplay]");
+    if (!nodes.length) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if (!("IntersectionObserver" in window)) return;
+    var io = new IntersectionObserver(function (ents) {
+      for (var i = 0; i < ents.length; i++) {
+        var v = ents[i].target;
+        if (ents[i].isIntersecting) {
+          if (v._held) continue;
+          if (!v._started) {
+            v.muted = true;
+            v.setAttribute("muted", "");
+            v.playsInline = true;
+            v._started = true;
+          }
+          var result = v.play();
+          if (result && result.catch) result.catch(function () {});
+        } else if (!v.paused) {
+          v._auto = true;
+          v.pause();
+        }
+      }
+    }, { threshold: 0.4 });
+    for (var n = 0; n < nodes.length; n++) {
+      (function (v) {
+        v.addEventListener("pause", function () {
+          if (v._auto) { v._auto = false; return; }
+          v._held = true;
+        });
+        v.addEventListener("play", function () { v._held = false; });
+        io.observe(v);
+      })(nodes[n]);
+    }
+  }
+
   function boot() {
     var headerSlot = document.getElementById("site-header");
     var footerSlot = document.getElementById("site-footer");
     if (headerSlot) headerSlot.innerHTML = headerHtml();
     if (footerSlot) footerSlot.innerHTML = footerHtml();
+    bindHero();
+    bindPromo();
 
     var btn = document.querySelector(".menu-btn");
     var top = document.querySelector(".top");
@@ -300,7 +566,16 @@
     }
   }
 
+  function start() {
+    function go() {
+      if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", boot);
+      else boot();
+    }
+    var ready = window.ENESMA_ROSTER_READY;
+    if (ready && ready.then) ready.then(go, go);
+    else go();
+  }
+
   maybePlayIntro();
-  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", boot);
-  else boot();
+  start();
 })();
