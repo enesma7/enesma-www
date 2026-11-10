@@ -93,12 +93,14 @@
           '<article class="agent">' +
             '<img src="' + esc(resolveImg(a.img)) + '" width="700" height="700" alt="Portrait of ' + esc(a.name) + '">' +
             '<div class="agent-body">' +
-              '<p class="agent-kicker">Agent</p>' +
-              '<h1 class="agent-name">' + esc(a.name) + "</h1>" +
-              '<p class="agent-role">' + esc(a.role) + " · DRE# " + esc(a.dre) + "</p>" +
-              ((a.languages && a.languages.length) ? '<p class="agent-langs">' + esc(a.languages.join(" · ")) + "</p>" : "") +
-              contactHtml(a) +
-              '<div class="socials">' + socialRow(a.social) + "</div>" +
+              '<div class="agent-info">' +
+                '<p class="agent-kicker">Agent</p>' +
+                '<h1 class="agent-name">' + esc(a.name) + "</h1>" +
+                '<p class="agent-role">' + esc(a.role) + " · DRE# " + esc(a.dre) + "</p>" +
+                ((a.languages && a.languages.length) ? '<p class="agent-langs">' + esc(a.languages.join(" · ")) + "</p>" : "") +
+                contactHtml(a) +
+                '<div class="socials">' + socialRow(a.social) + "</div>" +
+              "</div>" +
               '<div class="bio">' + (a.bioHtml || "") + "</div>" +
             "</div>" +
           "</article>" +
