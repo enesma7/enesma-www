@@ -677,6 +677,20 @@ body.nav-lock { overflow: hidden; }
   background: var(--white);
 }
 .agent-body { text-align: center; width: 100%; }
+.agent-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  text-align: center;
+}
+.agent-info .agent-kicker,
+.agent-info .agent-name,
+.agent-info .agent-role,
+.agent-info .agent-langs {
+  width: 100%;
+  text-align: center;
+}
 .agent-layout { text-align: center; padding-bottom: 88px; }
 .agent-layout .shell { padding-top: 36px; }
 .back { margin: 0 0 28px; text-align: left; }
@@ -708,10 +722,13 @@ body.nav-lock { overflow: hidden; }
 }
 .agent-contact {
   display: flex;
-  flex-direction: column;
+  flex-flow: row wrap;
+  justify-content: center;
   align-items: center;
-  gap: 8px;
+  gap: 8px 18px;
+  width: 100%;
   margin: 16px 0 0;
+  text-align: center;
 }
 .agent-contact a {
   text-decoration: none;
@@ -725,6 +742,7 @@ body.nav-lock { overflow: hidden; }
   justify-content: center;
   align-items: center;
   gap: 18px;
+  width: 100%;
   margin: 22px 0 40px;
 }
 .socials a {
@@ -821,7 +839,6 @@ body.nav-lock { overflow: hidden; }
   .home-tiles { padding: 40px 0 88px; }
   .roster { grid-template-columns: 1fr 1fr; gap: 22px; }
   .roster-tools { grid-template-columns: 1fr 220px; align-items: end; }
-  .agent-contact { flex-direction: row; gap: 18px; }
   .foot { grid-template-columns: 1.35fr 0.8fr 0.8fr 1.15fr; align-items: start; }
 }
 
