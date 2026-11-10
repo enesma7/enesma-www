@@ -7,7 +7,7 @@ The Agent Hub is a separate product. It stays in [`enesma-agent-hub`](https://gi
 - **Custom domain:** `www.enesmarealty.com` (`CNAME` at the repo root)
 - **Pages source:** `main` branch, site root (`/`)
 - **Preview:** [https://enesma7.github.io/enesma-www/](https://enesma7.github.io/enesma-www/)
-- **Stack:** static HTML, CSS, and JS. No build step. `site.css` and `site.js` are cache-busted with `?v=4`. `agents.js` is `?v=3`.
+- **Stack:** static HTML, CSS, and JS. No build step. `site.css` is cache-busted with `?v=5`. `site.js` is `?v=4`. `agents.js` is `?v=4`.
 
 ## Pages
 
@@ -36,7 +36,7 @@ Profiles share one template. Append one object to the `agents` array in `data/ro
 - `feedUrl` empty: the site loads `data/roster.json`.
 - `feedUrl` set to an absolute URL: the site loads that JSON instead, and falls back to `data/roster.json` if the request fails.
 
-The feed may be `{ "agents": [ ... ] }` or a bare array. Each agent uses `slug`, `name`, `role`, `phone`, `email`, `web`, `webLabel`, `dre`, `img`, `languages`, `social` (`label`, `href`), and `bioHtml`. On a remote feed, `img` should be an absolute URL. `languages` is an array of names such as `"English"` and `"Spanish"`. The Meet Our Agents page searches `name` and filters on `languages`.
+The feed may be `{ "agents": [ ... ] }` or a bare array. Each agent uses `slug`, `name`, `role`, `phone`, `email`, `web`, `webLabel`, `dre`, `img`, `languages`, `social` (`label`, `href`), and `bioHtml`. On a remote feed, `img` should be an absolute URL. `languages` is an array of names such as `"English"` and `"Spanish"`. The Meet Our Agents page searches `name` and filters on `languages`. A tile shows the photo, name, title, DRE, phone, and email, and links to that agent’s page. Social icons, website, languages, and the bio stay on the profile.
 
 When the Agent Hub public roster is live, set `feedUrl` to that URL. No other file needs to change.
 

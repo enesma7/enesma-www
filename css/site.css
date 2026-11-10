@@ -573,7 +573,7 @@ body.nav-lock { overflow: hidden; }
 .roster-tools {
   display: grid;
   gap: 14px;
-  max-width: 760px;
+  width: min(var(--max), 100%);
   margin: 0 auto 28px;
 }
 .roster-field {
@@ -605,8 +605,8 @@ body.nav-lock { overflow: hidden; }
 .roster {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 28px;
-  max-width: 760px;
+  gap: 18px;
+  width: min(var(--max), 100%);
   margin: 0 auto;
 }
 .roster-empty {
@@ -615,49 +615,55 @@ body.nav-lock { overflow: hidden; }
   color: var(--muted);
 }
 .agent-card {
-  display: block;
-  padding: 36px 22px 32px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 28px 18px 32px;
   text-align: center;
+  text-decoration: none;
+  color: inherit;
   border-radius: var(--radius);
   background: #fff;
   border: 1px solid rgba(0, 0, 7, 0.1);
 }
-.agent-card .agent-photo {
-  display: block;
-  width: min(220px, 68%);
-  margin: 0 auto 18px;
-  border-radius: var(--radius);
-}
-.agent-card .agent-photo:focus-visible { outline: 2px solid var(--black); outline-offset: 3px; }
+.agent-card:hover { border-color: #d4af37; }
+.agent-card:focus-visible { outline: 2px solid var(--black); outline-offset: 3px; }
 .agent-card img {
-  width: 100%;
+  width: min(220px, 68%);
   aspect-ratio: 1 / 1;
   height: auto;
-  margin: 0;
+  margin: 0 auto 16px;
   object-fit: cover;
   object-position: center top;
   border-radius: var(--radius);
 }
 .agent-card h2 {
   margin: 0;
-  font-size: clamp(26px, 4vw, 32px);
+  font-size: clamp(22px, 2.4vw, 28px);
   font-weight: 600;
   letter-spacing: -0.02em;
 }
-.agent-card h2 a { text-decoration: none; }
-.agent-card h2 a:hover { color: inherit; }
-.agent-card h2 a:focus-visible { outline: 2px solid var(--black); outline-offset: 3px; }
 .agent-card .agent-role,
-.agent-card .agent-langs {
+.agent-card .agent-line {
+  margin: 8px 0 0;
+  color: var(--muted);
+}
+.agent-card .agent-role {
+  font-size: 12px;
+  letter-spacing: 0.12em;
+}
+.agent-card .agent-line {
+  font-size: 15px;
+  letter-spacing: 0;
+  color: var(--black);
+}
+.agent-card[hidden] { display: none; }
+.agent-langs {
   margin: 8px 0 0;
   font-size: 13px;
   letter-spacing: 0.08em;
   color: var(--muted);
 }
-.agent-card .agent-contact { margin-top: 14px; }
-.agent-card .socials { margin: 18px 0 22px; }
-.agent-card .bio { text-align: left; }
-.agent-card[hidden] { display: none; }
 .agent {
   display: flex;
   flex-direction: column;
@@ -819,6 +825,7 @@ body.nav-lock { overflow: hidden; }
 @media (min-width: 720px) {
   .tile-grid { grid-template-columns: 1fr 1fr; gap: 22px; }
   .home-tiles { padding: 40px 0 88px; }
+  .roster { grid-template-columns: 1fr 1fr; gap: 22px; }
   .roster-tools { grid-template-columns: 1fr 220px; align-items: end; }
   .agent-contact { flex-direction: row; gap: 18px; }
   .foot { grid-template-columns: 1.35fr 0.8fr 0.8fr 1.15fr; align-items: start; }

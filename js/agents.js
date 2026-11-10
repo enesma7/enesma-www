@@ -96,6 +96,7 @@
               '<p class="agent-kicker">Agent</p>' +
               '<h1 class="agent-name">' + esc(a.name) + "</h1>" +
               '<p class="agent-role">' + esc(a.role) + " · DRE# " + esc(a.dre) + "</p>" +
+              ((a.languages && a.languages.length) ? '<p class="agent-langs">' + esc(a.languages.join(" · ")) + "</p>" : "") +
               contactHtml(a) +
               '<div class="socials">' + socialRow(a.social) + "</div>" +
               '<div class="bio">' + (a.bioHtml || "") + "</div>" +
@@ -109,19 +110,16 @@
   function rosterCard(a) {
     var href = esc(a.slug) + "/";
     var langs = a.languages || [];
-    var langLine = langs.length ? '<p class="agent-langs">' + esc(langs.join(" · ")) + "</p>" : "";
+    var phone = a.phone ? '<p class="agent-line">' + esc(a.phone) + "</p>" : "";
+    var email = a.email ? '<p class="agent-line">' + esc(a.email) + "</p>" : "";
     return (
-      '<article class="agent-card" data-name="' + esc(a.name) + '" data-languages="' + esc(langs.join("|")) + '">' +
-        '<a class="agent-photo" href="' + href + '">' +
-          '<img src="' + esc(resolveImg(a.img)) + '" width="700" height="700" alt="Portrait of ' + esc(a.name) + '">' +
-        "</a>" +
-        "<h2><a href=\"" + href + "\">" + esc(a.name) + "</a></h2>" +
+      '<a class="agent-card" href="' + href + '" data-name="' + esc(a.name) + '" data-languages="' + esc(langs.join("|")) + '">' +
+        '<img src="' + esc(resolveImg(a.img)) + '" width="700" height="700" alt="Portrait of ' + esc(a.name) + '">' +
+        "<h2>" + esc(a.name) + "</h2>" +
         '<p class="agent-role">' + esc(a.role) + " · DRE# " + esc(a.dre) + "</p>" +
-        langLine +
-        contactHtml(a) +
-        '<div class="socials">' + socialRow(a.social) + "</div>" +
-        '<div class="bio">' + (a.bioHtml || "") + "</div>" +
-      "</article>"
+        phone +
+        email +
+      "</a>"
     );
   }
 
