@@ -1,7 +1,7 @@
 /* ENESMA Realty consumer site
    Brand: Rocket Black #000007, Universal White #FBFBFB,
    Aztec Gold #EAD59E → #D5BE87, Illyrian Red #EF0207 → #9A0007.
-   Gold and red rules use gradients. The Agent Login button is solid Aztec Gold #D4AF37. */
+   Gold and red are used as gradients, including the Agent Login button. */
 
 @font-face {
   font-family: Inter;
@@ -222,7 +222,7 @@ h1, h2, p { text-wrap: pretty; }
   border: 0;
   border-bottom: 0;
   border-radius: 999px;
-  background: #d4af37;
+  background-image: var(--gold);
   color: var(--black);
   font-size: 15px;
   font-weight: 700;
@@ -232,7 +232,8 @@ h1, h2, p { text-wrap: pretty; }
 .nav > a.nav-login:hover,
 .nav > a.nav-login:focus-visible {
   color: var(--black);
-  filter: brightness(0.96);
+  background-image: var(--gold);
+  filter: brightness(0.97);
 }
 .nav > a.nav-login:focus-visible {
   outline: 2px solid var(--white);
