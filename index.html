@@ -3,19 +3,19 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>ENESMA Realty</title>
-  <meta name="description" content="Southern California real estate. Buy, sell, refinance, or meet an agent. Underpromise and overdeliver.">
-  <meta name="theme-color" content="#000007">
-  <link rel="canonical" href="https://www.enesmarealty.com/">
-  <link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png">
-  <link rel="apple-touch-icon" href="apple-touch-icon.png">
-  <meta property="og:title" content="ENESMA Realty">
-  <meta property="og:description" content="Southern California real estate. Buy, sell, refinance, or meet an agent. Underpromise and overdeliver.">
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="https://www.enesmarealty.com/">
-  <meta property="og:image" content="https://www.enesmarealty.com/assets/scenic-socal.jpg">
-  <link rel="preload" as="video" href="https://agent.enesmarealty.com/assets/hero/hero-01-santa-monica.mp4?v=2" type="video/mp4">
-  <link rel="stylesheet" href="css/site.css?v=10">
+  <link rel="preload" as="video" href="assets/hero/hero-01-santa-monica.mp4?v=1" type="video/mp4" fetchpriority="high">
+  <style>
+    html, body { margin: 0; background: #fbfbfb; }
+    #site-header { min-height: 64px; background: #000007; }
+    .home-hero { --lockup: min(400px, 78vw); position: relative; display: grid; place-items: center; overflow: hidden; background: #000007; color: #fbfbfb; min-height: calc(var(--lockup) * 0.58); }
+    .hero-lockup { width: var(--lockup); }
+    .hero-logo { width: 100%; height: auto; }
+    .hero-videos { position: absolute; inset: 0; }
+    .hero-videos video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; background: #000007; }
+    html.brand-intro-pending, html.brand-intro-pending body { background: #000007; }
+    html.brand-intro-pending body > :not(.brand-intro) { visibility: hidden; }
+    html.brand-intro-pending .hero-videos, html.brand-intro-pending .hero-videos video { visibility: visible; }
+  </style>
   <script>
     (function () {
       try {
@@ -27,6 +27,17 @@
       document.documentElement.classList.add("brand-intro-pending");
     })();
   </script>
+  <title>ENESMA Realty</title>
+  <meta name="description" content="Southern California real estate. Buy, sell, refinance, or meet an agent. Underpromise and overdeliver.">
+  <meta name="theme-color" content="#000007">
+  <link rel="canonical" href="https://www.enesmarealty.com/">
+  <link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <meta property="og:title" content="ENESMA Realty">
+  <meta property="og:description" content="Southern California real estate. Buy, sell, refinance, or meet an agent. Underpromise and overdeliver.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.enesmarealty.com/">
+  <meta property="og:image" content="https://www.enesmarealty.com/assets/scenic-socal.jpg">
 </head>
 <body data-page="home" data-root="">
   <a class="skip" href="#main">Skip to content</a>
@@ -43,8 +54,20 @@
   <main id="main">
     <section class="home-hero">
       <div class="hero-videos" aria-hidden="true">
-        <video class="over on" autoplay muted loop playsinline webkit-playsinline preload="auto" disablepictureinpicture disableremoteplayback src="https://agent.enesmarealty.com/assets/hero/hero-01-santa-monica.mp4?v=2"></video>
-        <video class="under" muted playsinline webkit-playsinline preload="auto" disablepictureinpicture disableremoteplayback src="https://agent.enesmarealty.com/assets/hero/hero-02-hollywood.mp4?v=2"></video>
+        <video id="hero-lead" class="over on" autoplay muted loop playsinline webkit-playsinline preload="auto" fetchpriority="high" disablepictureinpicture disableremoteplayback src="assets/hero/hero-01-santa-monica.mp4?v=1"></video>
+        <script>
+          (function () {
+            var v = document.getElementById("hero-lead");
+            if (!v) return;
+            v.muted = true;
+            v.defaultMuted = true;
+            v.playsInline = true;
+            var result = v.play();
+            if (result && result.catch) result.catch(function () {});
+          })();
+        </script>
+        <link rel="stylesheet" href="css/site.css?v=11">
+        <video class="under" muted playsinline webkit-playsinline preload="none" disablepictureinpicture disableremoteplayback></video>
       </div>
       <div class="hero-lockup">
         <img class="hero-logo" src="assets/logo-white.png" width="1600" height="369" alt="ENESMA Realty">
@@ -85,6 +108,6 @@
   </main>
   <div id="site-footer"></div>
   <script src="js/agents.js?v=6"></script>
-  <script src="js/site.js?v=6"></script>
+  <script src="js/site.js?v=7"></script>
 </body>
 </html>

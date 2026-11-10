@@ -3,6 +3,16 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="preload" as="video" href="../assets/promo/enesma-platform.mp4?v=2" type="video/mp4" fetchpriority="high">
+  <style>
+    html, body { margin: 0; background: #fbfbfb; color: #000007; font-family: Inter, "Helvetica Neue", Helvetica, Arial, sans-serif; }
+    #site-header { min-height: 64px; background: #000007; }
+    .page-hero { background: #000007; color: #fbfbfb; text-align: center; padding: 52px 20px 46px; }
+    .page-hero h1 { margin: 0; font-size: clamp(28px, 7vw, 48px); font-weight: 600; letter-spacing: 0.04em; line-height: 1.1; }
+    .kicker { margin: 0 0 12px; font-size: 11px; letter-spacing: 0.22em; font-weight: 600; color: #ead59e; }
+    .promo-bleed { margin: 0; background: #000007; }
+    .promo-bleed video { display: block; width: 100%; height: auto; background: #000007; }
+  </style>
   <title>Join Our Team · ENESMA Realty</title>
   <meta name="description" content="ENESMA Realty is for producing agents who want a direct line to the broker and a platform built to run a serious business.">
   <meta name="theme-color" content="#000007">
@@ -14,7 +24,6 @@
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://www.enesmarealty.com/join/">
   <meta property="og:image" content="https://www.enesmarealty.com/assets/scenic-socal.jpg">
-  <link rel="stylesheet" href="../css/site.css?v=10">
 </head>
 <body data-page="join" data-root="../">
   <a class="skip" href="#main">Skip to content</a>
@@ -36,10 +45,22 @@
       <div class="red-fade" aria-hidden="true"></div>
     </section>
     <figure class="promo promo-bleed">
-      <video controls autoplay muted loop playsinline webkit-playsinline preload="auto" poster="../assets/promo/enesma-platform.jpg" data-autoplay src="../assets/promo/enesma-platform.mp4?v=2" width="1280" height="720" aria-label="The ENESMA Platform">
+      <video id="join-promo" controls autoplay muted loop playsinline webkit-playsinline preload="auto" fetchpriority="high" data-autoplay src="../assets/promo/enesma-platform.mp4?v=2" width="1280" height="720" aria-label="The ENESMA Platform">
         <a href="../assets/promo/enesma-platform.mp4?v=2">Watch the ENESMA Platform Video</a>
       </video>
+      <script>
+        (function () {
+          var v = document.getElementById("join-promo");
+          if (!v) return;
+          v.muted = true;
+          v.defaultMuted = true;
+          v.playsInline = true;
+          var result = v.play();
+          if (result && result.catch) result.catch(function () {});
+        })();
+      </script>
     </figure>
+    <link rel="stylesheet" href="../css/site.css?v=11">
     <section class="page-body">
       <div class="shell">
         <div class="cta-wrap cta-top">
@@ -56,6 +77,6 @@
   </main>
   <div id="site-footer"></div>
   <script src="../js/agents.js?v=6"></script>
-  <script src="../js/site.js?v=6"></script>
+  <script src="../js/site.js?v=7"></script>
 </body>
 </html>

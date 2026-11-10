@@ -550,10 +550,30 @@ body.nav-lock { overflow: hidden; }
 .contact-lines a:hover { border-bottom-color: var(--black); }
 .contact-lines a:focus-visible { outline: 2px solid var(--black); outline-offset: 3px; }
 .promo-bleed {
+  position: relative;
   width: 100%;
   margin: 0;
   background: #000007;
 }
+.sound-toggle {
+  position: absolute;
+  right: 14px;
+  bottom: 72px;
+  z-index: 3;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  border: 2px solid #d5be87;
+  background: #000007;
+  color: #ead59e;
+  cursor: pointer;
+}
+.sound-toggle svg { width: 22px; height: 22px; display: block; }
+.sound-toggle:hover { filter: brightness(1.08); }
+.sound-toggle:focus-visible { outline: 2px solid #ead59e; outline-offset: 3px; }
 .promo-bleed video {
   width: 100%;
   max-width: none;
