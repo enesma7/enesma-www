@@ -7,7 +7,7 @@ The Agent Hub is a separate product. It stays in [`enesma-agent-hub`](https://gi
 - **Custom domain:** `www.enesmarealty.com` (`CNAME` at the repo root)
 - **Pages source:** `main` branch, site root (`/`)
 - **Preview:** [https://enesma7.github.io/enesma-www/](https://enesma7.github.io/enesma-www/)
-- **Stack:** static HTML, CSS, and JS. No build step. `site.css` is cache-busted with `?v=5`. `site.js` is `?v=4`. `agents.js` is `?v=4`.
+- **Stack:** static HTML, CSS, and JS. No build step. `site.css` is cache-busted with `?v=6`. `site.js` is `?v=4`. `agents.js` is `?v=4`.
 
 ## Pages
 
@@ -23,7 +23,7 @@ The Agent Hub is a separate product. It stays in [`enesma-agent-hub`](https://gi
 | `/join/` | Join the team. `#join-calculator` is reserved for a later calculator embed |
 | `/contact/` | Office line (909) 566-0505 and enrique@enesmabroker.com |
 
-Shared header and footer live in `js/site.js`. The header is a sticky black bar. Agents opens a menu of the people in `js/agents.js`. Office email on the brokerage footer and Contact page is `enrique@enesmabroker.com`. Office phone is `(909) 566-0505`. An agent's own phone and email stay on that profile only. Footer carries DRE# 01926362 and the Equal Housing mark. There is no MLS or IDX search.
+Shared header and footer live in `js/site.js`. The header is a sticky black bar. Agents opens a menu of the people in `js/agents.js`. Office email on the brokerage footer and Contact page is `enrique@enesmabroker.com`. Office phone `(909) 566-0505` is the footer, the Contact page, and the no-JavaScript office line. Enrique’s personal number `(909) 212-2994` is only on his agent tile and profile. Other agents’ numbers stay on their own tile and profile. Footer carries DRE# 01926362 and the Equal Housing mark. There is no MLS or IDX search.
 
 ## Adding an agent
 
