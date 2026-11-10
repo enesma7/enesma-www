@@ -1,0 +1,4 @@
+{
+  "_comment": "Point feedUrl at the Agent Hub public roster when that feed is live. Leave it empty to use data/roster.json on this site. The feed may be { \"agents\": [] } or a bare array. Each agent uses slug, name, role, phone, email, web, webLabel, dre, img, languages, social [{label, href}], and bioHtml. For a remote feed, img should be an absolute URL. languages is an array of language names, used by the Meet Our Agents filter.",
+  "feedUrl": ""
+}

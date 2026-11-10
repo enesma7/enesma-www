@@ -16,7 +16,7 @@
       window.__ENESMA_BASE = base;
       var css = document.createElement("link");
       css.rel = "stylesheet";
-      css.href = base + "css/site.css?v=3";
+      css.href = base + "css/site.css?v=6";
       document.head.appendChild(css);
       var icon = document.createElement("link");
       icon.rel = "icon";
@@ -31,7 +31,8 @@
   <noscript>
     <nav class="noscript-nav" aria-label="Primary">
       <a href="https://www.enesmarealty.com/">Home</a>
-      <a href="https://enesma7.github.io/enesma-www/">Preview home</a>
+      <a href="https://enesma7.github.io/enesma-www/">Preview Home</a>
+      <a href="https://agent.enesmarealty.com">Agent Login</a>
     </nav>
     <div class="noscript-foot">
       <span>DRE# 01926362</span>
@@ -41,7 +42,7 @@
   <main id="main">
     <section class="page-hero">
       <p class="kicker">404</p>
-      <h1>PAGE NOT FOUND</h1>
+      <h1>Page Not Found</h1>
       <div class="gold-rule" aria-hidden="true"></div>
       <div class="red-fade" aria-hidden="true"></div>
     </section>
@@ -49,7 +50,7 @@
       <div class="shell">
         <p>That page is not on this site.</p>
         <div class="cta-wrap">
-          <a class="cta" id="home-link" href="/">Back to home</a>
+          <a class="cta" id="home-link" href="/">Back to Home</a>
         </div>
       </div>
     </section>
@@ -58,10 +59,10 @@
   <script>
     document.getElementById("home-link").setAttribute("href", window.__ENESMA_BASE || "/");
     var agents = document.createElement("script");
-    agents.src = window.__ENESMA_BASE + "js/agents.js?v=2";
+    agents.src = window.__ENESMA_BASE + "js/agents.js?v=4";
     agents.onload = function () {
       var script = document.createElement("script");
-      script.src = window.__ENESMA_BASE + "js/site.js?v=3";
+      script.src = window.__ENESMA_BASE + "js/site.js?v=4";
       document.body.appendChild(script);
     };
     document.body.appendChild(agents);
