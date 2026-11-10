@@ -857,6 +857,13 @@ html.brand-intro-pending body {
 html.brand-intro-pending body > :not(.brand-intro) {
   visibility: hidden;
 }
+/* A hidden ancestor blocks iPhone autoplay. These stay visible under the overlay. */
+html.brand-intro-pending .hero-videos,
+html.brand-intro-pending .hero-videos video,
+html.brand-intro-pending .promo-bleed,
+html.brand-intro-pending .promo-bleed video {
+  visibility: visible;
+}
 .brand-intro {
   position: fixed;
   inset: 0;
