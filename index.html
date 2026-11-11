@@ -3,7 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="preload" as="video" href="assets/hero/hero-01-santa-monica.mp4?v=1" type="video/mp4" fetchpriority="high">
+  <link rel="preload" as="video" href="https://agent.enesmarealty.com/assets/hero/hero-01-santa-monica.mp4?v=2" type="video/mp4">
+  <link rel="stylesheet" href="css/site.css?v=11">
   <style>
     html, body { margin: 0; background: #fbfbfb; }
     #site-header { min-height: 64px; background: #000007; }
@@ -54,20 +55,8 @@
   <main id="main">
     <section class="home-hero">
       <div class="hero-videos" aria-hidden="true">
-        <video id="hero-lead" class="over on" autoplay muted loop playsinline webkit-playsinline preload="auto" fetchpriority="high" disablepictureinpicture disableremoteplayback src="assets/hero/hero-01-santa-monica.mp4?v=1"></video>
-        <script>
-          (function () {
-            var v = document.getElementById("hero-lead");
-            if (!v) return;
-            v.muted = true;
-            v.defaultMuted = true;
-            v.playsInline = true;
-            var result = v.play();
-            if (result && result.catch) result.catch(function () {});
-          })();
-        </script>
-        <link rel="stylesheet" href="css/site.css?v=11">
-        <video class="under" muted playsinline webkit-playsinline preload="auto" disablepictureinpicture disableremoteplayback></video>
+        <video class="over on" autoplay muted loop playsinline webkit-playsinline preload="auto" disablepictureinpicture disableremoteplayback src="https://agent.enesmarealty.com/assets/hero/hero-01-santa-monica.mp4?v=2"></video>
+        <video class="under" muted playsinline webkit-playsinline preload="auto" disablepictureinpicture disableremoteplayback src="https://agent.enesmarealty.com/assets/hero/hero-02-hollywood.mp4?v=2"></video>
       </div>
       <div class="hero-lockup">
         <img class="hero-logo" src="assets/logo-white.png" width="1600" height="369" alt="ENESMA Realty">
@@ -108,6 +97,6 @@
   </main>
   <div id="site-footer"></div>
   <script src="js/agents.js?v=6"></script>
-  <script src="js/site.js?v=8"></script>
+  <script src="js/site.js?v=9"></script>
 </body>
 </html>
