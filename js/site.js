@@ -527,6 +527,11 @@
     var active = 0;
     var clipAt = [0, 1 % clips.length];
     var fading = false;
+    var waitingPlay = false;
+    var wantSwitch = false;
+    var heroVisible = true;
+    var handoff = 0;
+    var retryTimer = 0;
     var fadeMs = 1600;
     slots[0]._heroSrc = slots[0]._heroSrc || clips[0];
     slots[1]._heroSrc = slots[1]._heroSrc || clips[1 % clips.length];
@@ -551,35 +556,67 @@
         if (!v.classList.contains("fading")) v.style.opacity = "1";
       }
     }
+    var prefetched = {};
+    function prefetch(src) {
+      if (!src || prefetched[src]) return;
+      prefetched[src] = true;
+      var link = document.createElement("link");
+      link.rel = "preload";
+      link.as = "video";
+      link.href = src;
+      document.head.appendChild(link);
+    }
+    function bufferedEnough(v) {
+      if (!v || v.error || !(v.videoWidth > 1)) return false;
+      if (v.readyState >= 4) return true;
+      if (v.readyState >= 3) {
+        try {
+          var end = v.buffered.length ? v.buffered.end(v.buffered.length - 1) : 0;
+          if (end - Math.max(v.currentTime || 0, 0) > 1.2) return true;
+        } catch (e) {}
+      }
+      return false;
+    }
     function arm(el, src) {
       prepHeroVideo(el);
       el.autoplay = false;
       el.removeAttribute("autoplay");
-      if (el._heroSrc === src && el.getAttribute("src")) return;
+      el.preload = "auto";
+      el.setAttribute("preload", "auto");
+      if (el._heroSrc === src && el.getAttribute("src")) {
+        if (el.error) {
+          try { el.load(); } catch (e) {}
+        }
+        return;
+      }
       el._heroSrc = src;
+      el._parked = false;
+      el._sawTail = false;
       el._soundReady = false;
       el._hasAudio = null;
       el.src = src;
       considerSound(el);
-      el.addEventListener("loadeddata", function parkFrame() {
-        if (el.classList.contains("over")) return;
-        try {
-          if (el.currentTime < 0.001) el.currentTime = 0.001;
-        } catch (e) {}
-        try { el.pause(); } catch (e) {}
-      }, { once: true });
+    }
+    function parkUnder(el) {
+      if (!el || fading || waitingPlay || wantSwitch) return;
+      if (el === slots[active] || el.classList.contains("over")) return;
+      if (el.readyState < 4 || el.paused) return;
+      try { el.pause(); } catch (e) {}
     }
     function play(v) {
-      if (!v || box.classList.contains("off")) return;
+      if (!v || box.classList.contains("off") || !heroVisible) return;
       prepHeroVideo(v);
       v.autoplay = true;
-      var wasLoop = v.loop || v.hasAttribute("loop");
-      v.loop = false;
-      v.removeAttribute("loop");
-      if (wasLoop && isFinite(v.duration) && v.currentTime > v.duration - fadeMs / 1000 - 0.3) {
-        try { v.currentTime = 0.05; } catch (e) {}
-      }
       v.setAttribute("autoplay", "");
+      // Stay in a loop until a handoff has a real frame. Stripping loop
+      // here is what left the hero stuck on the last frame.
+      if (!fading) {
+        v.loop = true;
+        v.setAttribute("loop", "");
+      }
+      if (v.ended || (isFinite(v.duration) && v.duration > 0 && v.currentTime >= v.duration - 0.05)) {
+        try { v.currentTime = 0.04; } catch (e) {}
+      }
       box.classList.remove("off");
       v.classList.add("on", "over");
       var result = v.play();
@@ -594,20 +631,54 @@
       }
       return result;
     }
-    function goNext() {
-      if (fading || box.classList.contains("off")) return;
-      fading = true;
+    function scheduleRetry() {
+      if (retryTimer) return;
+      retryTimer = setTimeout(function () {
+        retryTimer = 0;
+        if (wantSwitch) goNext();
+      }, 1000);
+    }
+    function clearRetry() {
+      if (!retryTimer) return;
+      clearTimeout(retryTimer);
+      retryTimer = 0;
+    }
+    function goNext(force) {
+      if (fading || waitingPlay || box.classList.contains("off") || !heroVisible) return;
       var outgoing = active;
       var incoming = outgoing ? 0 : 1;
       var incomingClip = clipAt[incoming];
       var prev = slots[outgoing];
       var next = slots[incoming];
+      if (!next.getAttribute("src")) arm(next, clips[incomingClip]);
+      var ready = bufferedEnough(next) || (force && next.videoWidth > 1 && next.readyState >= 2);
+      if (!ready) {
+        wantSwitch = true;
+        if (prev && !prev.loop) {
+          prev.loop = true;
+          prev.setAttribute("loop", "");
+        }
+        if (prev && (prev.paused || prev.ended) && !prev.error) play(prev);
+        scheduleRetry();
+        return;
+      }
+      var token = ++handoff;
       var started = false;
+      wantSwitch = true;
+      waitingPlay = true;
       function begin() {
-        if (started || !next.isConnected) return;
+        if (started || token !== handoff || !next.isConnected) return;
         if (!(next.videoWidth > 1)) return;
         started = true;
-        next.removeEventListener("playing", onPlaying);
+        waitingPlay = false;
+        wantSwitch = false;
+        clearRetry();
+        if (next._onHandoff) next.removeEventListener("playing", next._onHandoff);
+        prev.loop = false;
+        prev.removeAttribute("loop");
+        next.loop = true;
+        next.setAttribute("loop", "");
+        next._sawTail = false;
         prev.classList.add("over", "fading");
         next.classList.add("under");
         next.classList.remove("over");
@@ -615,7 +686,11 @@
         void prev.offsetWidth;
         prev.style.opacity = "0";
         active = incoming;
+        fading = true;
+        var follow = (incomingClip + 1) % clips.length;
+        prefetch(clips[follow]);
         setTimeout(function () {
+          if (token !== handoff) return;
           if (!next.isConnected) { fading = false; return; }
           prev.classList.remove("fading", "over", "on");
           prev.classList.add("under");
@@ -623,70 +698,125 @@
           next.classList.remove("under");
           next.classList.add("over", "on");
           try { prev.pause(); } catch (e) {}
-          var follow = (incomingClip + 1) % clips.length;
           arm(prev, clips[follow]);
           clipAt[outgoing] = follow;
           fading = false;
         }, fadeMs);
       }
       function onPlaying() { begin(); }
+      if (next._onHandoff) next.removeEventListener("playing", next._onHandoff);
+      next._onHandoff = onPlaying;
       next.addEventListener("playing", onPlaying);
       prepHeroVideo(next);
       next.autoplay = true;
+      next.preload = "auto";
       try {
-        if (next.currentTime > 0.2 || next.currentTime < 0.001) next.currentTime = 0.001;
+        if (next.readyState >= 1 && next.currentTime > 0.3) next.currentTime = 0.001;
       } catch (e) {}
       var result = next.play();
       if (result && result.then) {
         result.then(function () { if (next.videoWidth > 1) begin(); }).catch(function (err) {
+          if (token !== handoff) return;
           if (err && err.name === "AbortError") return;
-          if (autoplayBlocked(err)) showGesture();
+          if (autoplayBlocked(err)) {
+            showGesture();
+            watchGesture(prev);
+          }
         });
+      } else if (!next.paused && next.videoWidth > 1) {
+        begin();
       }
       setTimeout(function () {
-        if (started || !next.isConnected) return;
-        fading = false;
-        next.removeEventListener("playing", onPlaying);
-        try { next.pause(); } catch (e) {}
-        restack();
-      }, 1200);
+        if (token !== handoff || started || !next.isConnected) return;
+        waitingPlay = false;
+        if (next._onHandoff) next.removeEventListener("playing", next._onHandoff);
+        wantSwitch = true;
+        if (prev && !prev.loop) {
+          prev.loop = true;
+          prev.setAttribute("loop", "");
+        }
+        if (prev && (prev.paused || prev.ended) && !prev.error) play(prev);
+        scheduleRetry();
+      }, 1000);
+    }
+    function recover(v) {
+      if (v !== slots[active] || fading || waitingPlay || !heroVisible || box.classList.contains("off")) return;
+      if (hero && hero.classList.contains("needs-gesture") && v.paused) return;
+      if (v._recoverTimer) return;
+      var mark = v.currentTime || 0;
+      v._recoverTimer = setTimeout(function () {
+        v._recoverTimer = 0;
+        if (v !== slots[active] || fading || waitingPlay || !heroVisible) return;
+        if (!v.paused && !v.ended && (v.currentTime || 0) > mark + 0.05) return;
+        if (v.error || v.ended) {
+          wantSwitch = true;
+          goNext(true);
+          if (fading || waitingPlay) return;
+        }
+        if (!v.error) play(v);
+      }, 1000);
     }
     for (var i = 0; i < slots.length; i++) {
       (function (v) {
         v.addEventListener("playing", function () {
-          if (v === slots[active]) clearGesture();
+          if (v === slots[active]) {
+            clearGesture();
+            v._stuckTries = 0;
+            v._errCount = 0;
+            v._played = true;
+          }
         });
+        v.addEventListener("canplaythrough", function () {
+          parkUnder(v);
+          if (wantSwitch && v !== slots[active] && !fading && !waitingPlay) goNext();
+        });
+        v.addEventListener("stalled", function () { recover(v); });
+        v.addEventListener("waiting", function () { recover(v); });
         v.addEventListener("error", function () {
-          if (v !== slots[active] || fading) return;
-          goNext();
+          if (fading || waitingPlay) return;
+          v._errCount = (v._errCount || 0) + 1;
+          if (v._errCount > clips.length) return;
+          if (v === slots[active]) {
+            wantSwitch = true;
+            goNext(true);
+            if (fading || waitingPlay) return;
+            var n = (clipAt[active] + 1) % clips.length;
+            clipAt[active] = n;
+            v.removeAttribute("src");
+            v._heroSrc = "";
+            arm(v, clips[n]);
+            play(v);
+            return;
+          }
+          var idx = v === slots[0] ? 0 : 1;
+          var n2 = (clipAt[idx] + 1) % clips.length;
+          clipAt[idx] = n2;
+          v.removeAttribute("src");
+          v._heroSrc = "";
+          arm(v, clips[n2]);
         });
         v.addEventListener("timeupdate", function () {
-          if (v !== slots[active] || fading || !isFinite(v.duration)) return;
-          if (v.currentTime >= v.duration - fadeMs / 1000) goNext();
+          if (v !== slots[active] || fading || waitingPlay || !isFinite(v.duration)) return;
+          v._seenTime = v.currentTime;
+          v._seenAt = Date.now();
+          if (v.currentTime >= v.duration - fadeMs / 1000) {
+            v._sawTail = true;
+            if (wantSwitch && retryTimer) return;
+            goNext();
+          } else if (v._sawTail && v.currentTime < 0.35) {
+            v._sawTail = false;
+            goNext();
+          }
         });
         v.addEventListener("ended", function () {
-          if (v === slots[active]) goNext();
+          if (v !== slots[active] || fading || waitingPlay) return;
+          wantSwitch = true;
+          goNext();
+          if (!fading && !waitingPlay) play(v);
         });
       })(slots[i]);
     }
-    function armSecond() {
-      if (!slots[1].isConnected || slots[1].getAttribute("src")) return;
-      arm(slots[1], clips[clipAt[1]]);
-    }
-    if (!slots[1].getAttribute("src")) {
-      if (slots[0].currentTime > 0 && !slots[0].paused) armSecond();
-      else slots[0].addEventListener("playing", armSecond, { once: true });
-    } else {
-      (function (el) {
-        function park() {
-          if (el.classList.contains("over")) return;
-          try { if (el.currentTime < 0.001) el.currentTime = 0.001; } catch (e) {}
-          try { el.pause(); } catch (e) {}
-        }
-        if (el.readyState >= 2) park();
-        else el.addEventListener("loadeddata", park, { once: true });
-      })(slots[1]);
-    }
+    if (!slots[1].getAttribute("src")) arm(slots[1], clips[clipAt[1]]);
     restack();
     box.classList.remove("off");
     if (hero && !hero._heroClick) {
@@ -694,11 +824,13 @@
       hero.addEventListener("click", function () {
         if (!hero.classList.contains("needs-gesture")) return;
         play(slots[active]);
+        if (wantSwitch) goNext();
       });
     }
     if ("IntersectionObserver" in window && hero) {
       var io = new IntersectionObserver(function (ents) {
         var vis = ents[0] && ents[0].isIntersecting;
+        heroVisible = !!vis;
         if (!vis) {
           if (fading) return;
           var lead = slots[active];
@@ -708,10 +840,49 @@
           }
         } else {
           play(slots[active]);
+          if (wantSwitch) goNext();
         }
       }, { threshold: 0.2 });
       io.observe(hero);
     }
+    var watchAt = 0;
+    var watchTime = -1;
+    setInterval(function () {
+      if (box.classList.contains("off") || !heroVisible) return;
+      var v = slots[active];
+      if (!v) return;
+      if (fading || waitingPlay) {
+        if (v.paused && !v.ended && !v.error) {
+          var again = v.play();
+          if (again && again.catch) again.catch(function () {});
+        }
+        watchTime = v.currentTime || 0;
+        watchAt = Date.now();
+        return;
+      }
+      if (hero && hero.classList.contains("needs-gesture") && v.paused) return;
+      var now = Date.now();
+      var t = v.currentTime || 0;
+      if (!v.paused && !v.ended && Math.abs(t - watchTime) > 0.04) {
+        watchTime = t;
+        watchAt = now;
+        v._stuckTries = 0;
+        return;
+      }
+      if (!watchAt) watchAt = now;
+      if (now - watchAt < 1000) return;
+      watchAt = now;
+      v._stuckTries = (v._stuckTries || 0) + 1;
+      var nxt = slots[active ? 0 : 1];
+      if (v.error || v.ended || (v._played && v._stuckTries >= 2)) {
+        v._stuckTries = 0;
+        wantSwitch = true;
+        goNext(true);
+        if (fading || waitingPlay) return;
+      }
+      if (!v.error) play(v);
+      if (nxt && !nxt.getAttribute("src")) arm(nxt, clips[clipAt[active ? 0 : 1]]);
+    }, 500);
     play(slots[active]);
   }
 
@@ -756,7 +927,6 @@
     var footerSlot = document.getElementById("site-footer");
     if (headerSlot) headerSlot.innerHTML = headerHtml();
     if (footerSlot) footerSlot.innerHTML = footerHtml();
-    bindHero();
     bindPromo();
 
     var btn = document.querySelector(".menu-btn");
@@ -806,5 +976,8 @@
 
   maybePlayIntro();
   startMedia();
+  // The roster feed can take seconds. The lead clip is only five seconds,
+  // so the next file has to start loading now, not after that feed.
+  if (document.querySelector(".hero-videos")) bindHero();
   start();
 })();
