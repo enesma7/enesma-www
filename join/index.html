@@ -61,6 +61,7 @@
       </script>
     </figure>
     <link rel="stylesheet" href="../css/site.css?v=11">
+    <link rel="stylesheet" href="../css/join-calculator.css?v=1">
     <section class="page-body">
       <div class="shell">
         <div class="cta-wrap cta-top">
@@ -70,13 +71,31 @@
           <p>ENESMA Realty is for producing agents who want a direct line to the broker and a platform built to run a serious business. You keep the relationship with your clients. We bring the brand, the tools, and a broker who follows up personally.</p>
           <p>If you are ready to grow production in Southern California, we would like to meet you.</p>
         </div>
-        <!-- Join calculator embed reserved for a later phase. No stable public URL in Phase 1. -->
-        <div id="join-calculator" hidden></div>
+        <div id="join-calculator" aria-labelledby="join-calculator-title">
+          <div class="wrap">
+            <h2 class="calc-title" id="join-calculator-title">See What You'd Keep With ENESMA Realty</h2>
+            <p class="sub">Compare your current brokerage side by side. Every field is optional and blank means $0.</p>
+            <div class="card inputs" id="jc-glob"></div>
+            <div class="cols">
+              <div class="card col" id="jc-c0"></div>
+              <div class="card col en" id="jc-c1"></div>
+            </div>
+            <div class="hero">
+              <div class="head" id="jc-head"></div>
+              <div class="bars" id="jc-bars"></div>
+            </div>
+            <p class="fine">All figures are estimates for illustration only and are not a guarantee of earnings or an offer of terms. Actual commissions, fees, caps and benefits depend on your agreement, transactions and brokerage policies. Revenue share and stock awards are not guaranteed. Confirm all terms with ENESMA Realty before making decisions.</p>
+          </div>
+        </div>
+        <div class="cta-wrap">
+          <a class="cta" href="https://app.enesmarealty.com/leadforms/join.html" target="_blank" rel="noopener noreferrer">Join Today<span class="sr-only"> (opens in a new tab)</span></a>
+        </div>
       </div>
     </section>
   </main>
   <div id="site-footer"></div>
   <script src="../js/agents.js?v=6"></script>
   <script src="../js/site.js?v=9"></script>
+  <script src="../js/join-calculator.js?v=1"></script>
 </body>
 </html>
