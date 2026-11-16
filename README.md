@@ -21,7 +21,7 @@ The Agent Hub is a separate product. It stays in [`enesma-agent-hub`](https://gi
 | `/agents/profile/?a=<slug>` | Profile for an agent who does not have a static folder yet |
 | `/agents/enrique-esparza/` | Broker page. Hydrates from the feed. Direct line (909) 212-2994 |
 | `/agents/lilia-amador/` | Agent page. Hydrates from the feed |
-| `/join/` | Join the team. `#join-calculator` is reserved for a later calculator embed |
+| `/join/` | Join the team. The earnings calculator sits under the copy, with Join Today above and below |
 | `/contact/` | Office line (909) 566-0505 and enrique@enesmabroker.com |
 
 Shared header and footer live in `js/site.js`. The header is a sticky black bar. Agents opens a menu of the people in `js/agents.js`. Office email on the brokerage footer and Contact page is `enrique@enesmabroker.com`. Office phone `(909) 566-0505` is the footer, the Contact page, and the no-JavaScript office line. Enrique’s personal number `(909) 212-2994` is only on his agent tile and profile. Other agents’ numbers stay on their own tile and profile. Footer carries DRE# 01926362 and the Equal Housing mark. There is no MLS or IDX search.
@@ -50,7 +50,7 @@ Each gold button opens the matching full-page form in a new tab:
 
 `https://app.enesmarealty.com/leadforms/refer.html` is live. This consumer site has no Refer page, so it is not linked.
 
-No Join calculator in Phase 1. `#join-calculator` on the Join page is reserved for a later embed.
+The Join page embeds the agent earnings calculator in `#join-calculator` (`css/join-calculator.css?v=1`, `js/join-calculator.js?v=1`). Terms are an 80% split, a $10,000 annual cap, a $200 admin fee per deal, and no monthly fee.
 
 ## DNS (GoDaddy — registrar stays GoDaddy)
 

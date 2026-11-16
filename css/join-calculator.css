@@ -1,0 +1,352 @@
+/* Join-page earnings calculator.
+   Light Inter embed from enesma-calculators join-calculator.html
+   at 6b390e57639c1900e746dcfda96665d6c68d6ac0.
+   Scoped to #join-calculator so the rest of the site is unchanged.
+   Custom properties stay on this root so they do not override site.css --gold. */
+
+#join-calculator {
+  --blk: #000007;
+  --wht: #fbfbfb;
+  --gold: linear-gradient(135deg, #ead59e, #d5be87);
+  --mut: rgba(0, 0, 7, 0.62);
+  --gl: linear-gradient(135deg, #ead59e, #d5be87);
+  margin-top: 48px;
+  max-width: 100%;
+  color: var(--blk);
+  font-family: Inter, "Helvetica Neue", Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+#join-calculator * { box-sizing: border-box; }
+
+#join-calculator .wrap {
+  width: 100%;
+  max-width: 1120px;
+  padding: 4px 2px;
+}
+
+#join-calculator .calc-title {
+  margin: 0 0 6px;
+  color: var(--blk);
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+}
+
+#join-calculator .sub {
+  margin: 0 0 28px;
+  color: var(--mut);
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+#join-calculator .card {
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  padding: 0;
+  box-shadow: none;
+}
+
+#join-calculator .inputs {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  margin-bottom: 18px;
+  padding-bottom: 18px;
+  border-bottom: 2px solid transparent;
+  border-image: var(--gold) 1;
+}
+
+#join-calculator label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+  color: var(--mut);
+  font-size: 12px;
+  font-weight: 500;
+}
+
+#join-calculator input {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  padding: 11px 12px;
+  border: 1.5px solid transparent;
+  border-radius: 10px;
+  outline: none;
+  background: linear-gradient(#fbfbfb, #fbfbfb) padding-box, var(--gold) border-box;
+  color: var(--blk);
+  font: 500 15px Inter, "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+#join-calculator input:focus {
+  background:
+    linear-gradient(#fbfbfb, #fbfbfb) padding-box,
+    linear-gradient(135deg, #d5be87, #d5be87) border-box;
+  box-shadow: 0 0 0 3px rgba(213, 190, 135, 0.25);
+}
+
+#join-calculator .cols {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 28px;
+}
+
+#join-calculator .col h3 {
+  display: inline-block;
+  margin: 0;
+  padding-bottom: 6px;
+  border-bottom: 3px solid transparent;
+  border-image: var(--gold) 1;
+  color: var(--blk);
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+#join-calculator .fx {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+  color: var(--mut);
+  font-size: 12px;
+  font-weight: 500;
+}
+
+#join-calculator .fx b {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  min-height: 43px;
+  padding: 8px 12px;
+  border: 0;
+  border-radius: 10px;
+  background: var(--gold);
+  background-clip: border-box;
+  color: var(--blk);
+  font: 600 15px Inter, "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+#join-calculator .fx b small {
+  margin-left: 6px;
+  color: rgba(0, 0, 7, 0.65);
+  font-size: 12px;
+  font-weight: 500;
+}
+
+#join-calculator .lock {
+  margin: 12px 0 0;
+  color: var(--mut);
+  font-size: 11px;
+  line-height: 1.45;
+}
+
+#join-calculator .hrow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin: 0 0 14px;
+}
+
+#join-calculator .seg {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  max-width: 100%;
+  color: var(--mut);
+  font-size: 12px;
+  font-weight: 500;
+}
+
+#join-calculator .seg .opts {
+  display: inline-flex;
+  padding: 3px;
+  border: 1.5px solid transparent;
+  border-radius: 99px;
+  background: linear-gradient(#fbfbfb, #fbfbfb) padding-box, var(--gold) border-box;
+}
+
+#join-calculator .seg button {
+  padding: 6px 12px;
+  border: 0;
+  border-radius: 99px;
+  background: none;
+  color: rgba(0, 0, 7, 0.8);
+  font: 600 12px Inter, "Helvetica Neue", Helvetica, Arial, sans-serif;
+  cursor: pointer;
+}
+
+#join-calculator .seg button.on {
+  background: var(--gold);
+  color: var(--blk);
+}
+
+#join-calculator .seg button:focus-visible {
+  outline: 2px solid var(--blk);
+  outline-offset: 1px;
+}
+
+#join-calculator .f {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+#join-calculator details {
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px solid transparent;
+  border-image: var(--gl) 1;
+}
+
+#join-calculator summary {
+  display: inline-block;
+  padding-bottom: 3px;
+  background: var(--gold) left bottom / 100% 2px no-repeat;
+  color: var(--blk);
+  font-size: 14px;
+  font-weight: 600;
+  list-style: none;
+  cursor: pointer;
+}
+
+#join-calculator summary::-webkit-details-marker { display: none; }
+#join-calculator summary::before { content: "+ "; }
+#join-calculator details[open] summary::before { content: "\2013 "; }
+
+#join-calculator details .f { margin-top: 12px; }
+#join-calculator .full { grid-column: 1 / -1; }
+
+#join-calculator .res {
+  margin-top: 18px;
+  color: rgba(0, 0, 7, 0.85);
+  font-size: 13px;
+}
+
+#join-calculator .res > div {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 4px 12px;
+  padding: 5px 0;
+  border-bottom: 1px solid transparent;
+  border-image: var(--gl) 1;
+}
+
+#join-calculator .res > div span:first-child { min-width: 0; }
+#join-calculator .res > div span:last-child { white-space: nowrap; }
+
+#join-calculator .res .tot {
+  padding-top: 10px;
+  border: 0;
+  border-image: none;
+  color: var(--blk);
+  font-size: 15px;
+  font-weight: 700;
+}
+
+#join-calculator .res > div.capinfo {
+  display: block;
+  margin-top: 8px;
+  border: 0;
+  border-image: none;
+  color: var(--blk);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.45;
+}
+
+#join-calculator .hero {
+  margin: 22px 0 10px;
+  text-align: center;
+}
+
+#join-calculator .head {
+  color: var(--blk);
+  font-size: 44px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  overflow-wrap: break-word;
+}
+
+#join-calculator .head::after {
+  content: "";
+  display: block;
+  width: 96px;
+  height: 4px;
+  margin: 12px auto 0;
+  border-radius: 4px;
+  background: var(--gold);
+}
+
+#join-calculator .head.neutral { font-size: 30px; }
+#join-calculator .head.neutral::after { display: none; }
+
+#join-calculator .bars {
+  max-width: 720px;
+  margin: 22px auto 0;
+  text-align: left;
+}
+
+#join-calculator .bar { margin: 12px 0; }
+
+#join-calculator .bar .lbl {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 4px 12px;
+  margin-bottom: 6px;
+  color: rgba(0, 0, 7, 0.85);
+  font-size: 13px;
+}
+
+#join-calculator .track {
+  height: 14px;
+  overflow: hidden;
+  border-radius: 99px;
+  background: rgba(0, 0, 7, 0.07);
+}
+
+#join-calculator .fill {
+  height: 100%;
+  border-radius: 99px;
+  background: rgba(0, 0, 7, 0.35);
+  transition: width 0.4s;
+}
+
+#join-calculator .fill.g { background: var(--gold); }
+
+#join-calculator .fine {
+  margin: 18px 0 0;
+  color: rgba(0, 0, 7, 0.55);
+  font-size: 11px;
+  line-height: 1.5;
+  text-align: center;
+}
+
+@media (max-width: 760px) {
+  #join-calculator .wrap { padding: 4px 0; }
+  #join-calculator .inputs,
+  #join-calculator .cols { grid-template-columns: minmax(0, 1fr); }
+  #join-calculator .calc-title { font-size: 21px; }
+  #join-calculator .sub { margin-bottom: 16px; font-size: 14px; }
+  #join-calculator .inputs { gap: 10px; }
+  #join-calculator .f { gap: 10px; }
+  #join-calculator .cols { gap: 20px; }
+  #join-calculator .head { font-size: 28px; }
+  #join-calculator .head.neutral { font-size: 22px; }
+  #join-calculator .hero { margin: 16px 0 6px; }
+  #join-calculator .fine { margin-top: 12px; }
+}
+
+@media (max-width: 420px) {
+  #join-calculator .f { grid-template-columns: minmax(0, 1fr); }
+}
