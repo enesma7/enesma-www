@@ -71,7 +71,7 @@
           "<span></span><span></span><span></span>" +
         "</button>" +
         '<nav id="site-nav" class="nav" aria-label="Primary">' + links +
-          '<a class="nav-login" href="https://agent.enesmarealty.com">Agent Login</a>' +
+          '<a class="nav-login" href="https://agent.enesmarealty.com">AGENT LOGIN</a>' +
         "</nav>" +
       "</header>"
     );
